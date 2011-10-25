@@ -21040,6 +21040,17 @@ void Player::SendCooldownEvent(SpellEntry const *spellInfo, uint32 itemId, Spell
     SendDirectMessage(&data);
 }
 
+void Player::SendSpellCooldownEvent(SpellEntry const *spellInfo, uint32 unTimeMs)
+{
+	WorldPacket data(SMSG_SPELL_COOLDOWN, 8+1+4);
+	data << uint64(GetGUID());
+	data << uint8(0);
+	data << uint32(spellInfo->Id);
+	data << uint32(unTimeMs);
+	SendDirectMessage(&data);
+}
+
+
 void Player::UpdatePotionCooldown(Spell* spell)
 {
     // no potion used i combat or still in combat

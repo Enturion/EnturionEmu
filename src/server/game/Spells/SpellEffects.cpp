@@ -1577,6 +1577,8 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                 {
                     m_caster->CastSpell(m_caster, 65156, true);
                     m_caster->ToPlayer()->AddSpellCooldown(20252, 0, time(NULL) + 30);
+					SpellEntry const *spellInfoA = sSpellStore.LookupEntry(20252);
+					m_caster->ToPlayer()->SendSpellCooldownEvent(spellInfoA);
                 }
                 return;
             }
@@ -1628,14 +1630,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     m_caster->CastCustomSpell(unitTarget, 23885, &damage, NULL, NULL, true, NULL);
                     return;
                 }
-                // Intercept
-                case 20252:
-                {
-                    //Juggernaut CD part
-                    if (m_caster->HasAura(64976))
-                        m_caster->ToPlayer()->AddSpellCooldown(100, 0, time(NULL) + 13); //15 - 2 from Juggernaut
-                    return;
-                }
+
             }
             break;
         case SPELLFAMILY_WARLOCK:
@@ -2247,6 +2242,16 @@ void Spell::EffectTriggerSpell(SpellEffIndex effIndex)
         // Coldflame
         case 33801:
             return; // just make the core stfu
+        // Intercept
+        case 20253:
+        {
+            //Juggernaut CD part
+            if (m_caster->HasAura(64976))
+                m_caster->ToPlayer()->AddSpellCooldown(100, 0, time(NULL) + 13); //15 - 2 from Juggernaut
+				SpellEntry const *spellInfoA = sSpellStore.LookupEntry(100);
+				m_caster->ToPlayer()->SendSpellCooldownEvent(spellInfoA,13000);
+            break;
+        }
     }
 
     // normal case
