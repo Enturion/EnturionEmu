@@ -2250,7 +2250,7 @@ void Spell::EffectTriggerSpell(SpellEffIndex effIndex)
                 m_caster->ToPlayer()->AddSpellCooldown(100, 0, time(NULL) + 13); //15 - 2 from Juggernaut
 				SpellEntry const *spellInfoA = sSpellStore.LookupEntry(100);
 				m_caster->ToPlayer()->SendSpellCooldownEvent(spellInfoA,13000);
-            return;
+            break;
         }
     }
 
