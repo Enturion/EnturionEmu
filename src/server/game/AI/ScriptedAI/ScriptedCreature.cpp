@@ -578,6 +578,31 @@ void BossAI::_JustDied()
         instance->SetBossState(bossId, DONE);
         instance->SaveToDB();
     }
+
+	// Award Points
+	if (Map* map = instance->instance)
+	{
+		Map::PlayerList const &PlayerList = map->GetPlayers();
+		if (!PlayerList.isEmpty())
+		{
+			for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+			{
+				if (Player* player = i->getSource())
+				{
+					if (map->IsLichKingDungeon())
+						player->ModifyCurrency(395, 1600);
+					else if (map->IsLichKingRaid())
+						player->ModifyCurrency(395, 2300);
+					else if (map->IsCataclysmDungeon())
+						player->ModifyCurrency(395, 7500);
+					else if (map->IsCataclysmRaid() && !Is25ManRaid())
+						player->ModifyCurrency(396, 7500);
+					else if (map->IsCataclysmRaid() && Is25ManRaid())
+						player->ModifyCurrency(396, 10500);
+				}
+			}
+		}
+	}	
 }
 
 void BossAI::_EnterCombat()
