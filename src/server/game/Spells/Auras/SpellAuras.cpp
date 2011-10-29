@@ -1589,6 +1589,13 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
         case SPELLFAMILY_PALADIN:
             switch(GetId())
             {
+        		case 25771: //Forbearance
+        		{
+        			target->ApplySpellImmune(GetId(), IMMUNITY_ID, 1022, apply);  // Hand of Protection
+        			target->ApplySpellImmune(GetId(), IMMUNITY_ID, 642, apply);   // Divine Shield
+        			target->ApplySpellImmune(GetId(), IMMUNITY_ID, 633, apply);  // Lay on Hands
+        			break;
+        		}
                 case 19746:
                 case 31821:
                     // Aura Mastery Triggered Spell Handler
