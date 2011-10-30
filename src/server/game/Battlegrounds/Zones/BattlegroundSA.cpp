@@ -280,7 +280,7 @@ void BattlegroundSA::StartShips()
         {
             if (Player* p = sObjectMgr->GetPlayer(itr->first))
             {
-                if (p->GetTeamId() != Attackers)
+                if (p->GetTeamId() != Attackers) 
                     continue;
 
                 UpdateData data;
