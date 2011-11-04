@@ -74,6 +74,7 @@ public:
         EventMap events;
         SummonList Summons;
         bool check_in;
+		bool summoned_Nefarian;
 
         uint32 m_uiSayTimer;                                    // Timer for random chat
         uint32 m_uiRebuffTimer;                                 // Timer for rebuffing
@@ -113,7 +114,9 @@ public:
             
             check_in = false;
 			isCTW = false;
+			summoned_Nefarian = false ;
 		}
+
 
         void JustDied(Unit* /*Kill*/)
         {
@@ -167,16 +170,6 @@ public:
 					//me->GetMotionMaster()->MoveIdle();
 				}
 
-				//Spell STOP CTW timer
-                // if (m_uiSpellTimerCTW <= uiDiff && isCTW)
-                // {
-                        // DoCast(me, SPELL_STOP_CALL_THE_WIND);
-						// m_uiSpellTimerCTW_stop = urand(2000,5000);
-						// isCTW = false;
-                // }
-                // else if ( isCTW ) 
-                    // m_uiSpellTimerCTW -= uiDiff;
-
                 //Spell CB timer
                 if (m_uiSpellTimerCB <= uiDiff)
                 {
@@ -213,9 +206,10 @@ public:
 				else
 					m_uiSpellTimerSummTwister -= uiDiff;
 
-				if (me->GetHealth() < me->GetMaxHealth() / 4 )  
+				if( (me->GetHealth() < me->GetMaxHealth() / 4 ) && (!summoned_Nefarian)   ) 
 				{
 					me->SummonCreature(NPC_NEFARIAN, 0.0f, 0.0f, 0.0f, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+					summoned_Nefarian = true; // to prevent the continuos spawn of nefy 
 				}
 /*
 				Map::PlayerList const &PlayerList = pInstance->instance->GetPlayers();
