@@ -41,6 +41,7 @@ enum Data
     DATA_TOXITRON_GUID           = 9, 
     DATA_ONYXIA_GUID             = 10, 
     DATA_BILE_O_TRON_800         = 11, 
+	DATA_ONYXIA_EVENT			 = 12
 	};
 
 

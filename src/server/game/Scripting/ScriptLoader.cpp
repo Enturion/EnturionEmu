@@ -598,7 +598,8 @@ void AddSC_instance_throne_of_the_tides();      //Throne of the Tides
 void AddSC_instance_blackrock_caverns();        //Blackrock Caverns
 void AddSC_instance_blackwing_descent();		//Blackwing Descent
 void AddSC_boss_magmaw();
-
+void AddSC_boss_onyxia2();
+void AddSC_boss_nefarian2();
 // battlegrounds
 
 // outdoor pvp
@@ -1236,7 +1237,8 @@ void AddNorthrendScripts()
     AddSC_instance_blackrock_caverns();        //Blackrock Caverns
 	AddSC_instance_blackwing_descent();			//Blackwing Descent
 	AddSC_boss_magmaw();
-
+	AddSC_boss_onyxia2();
+	AddSC_boss_nefarian2();
 #endif
 }
 

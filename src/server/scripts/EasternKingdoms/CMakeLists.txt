@@ -213,6 +213,8 @@ set(scripts_STAT_SRCS
   EasternKingdoms/BlackwingDescent/instance_blackwing_descent.cpp
   EasternKingdoms/BlackwingDescent/blackwing_descent.h
   EasternKingdoms/BlackwingDescent/boss_magmaw.cpp
+  EasternKingdoms/BlackwingDescent/boss_onyxia2.cpp
+EasternKingdoms/BlackwingDescent/boss_nefarian.cpp
 )
 
 message("  -> Prepared: Eastern Kingdoms")
