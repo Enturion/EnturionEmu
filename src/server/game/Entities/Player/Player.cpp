@@ -5873,15 +5873,15 @@ void Player::SetRegularAttackTime()
 {
     for (uint8 i = 0; i < MAX_ATTACK; ++i)
     {
+        uint32 attackTime = BASE_ATTACK_TIME;
         Item *tmpitem = GetWeaponForAttack(WeaponAttackType(i), true);
-        if (tmpitem && !tmpitem->IsBroken() && tmpitem->GetProto()->Block)
+        if (tmpitem && !tmpitem->IsBroken())
         {
             ItemPrototype const *proto = tmpitem->GetProto();
             if (proto->Delay)
-                SetAttackTime(WeaponAttackType(i), proto->Delay);
+                attackTime = proto->Delay;
         }
-        else
-            SetAttackTime(WeaponAttackType(i), BASE_ATTACK_TIME);  // If there is no weapon reset attack time to base (might have been changed from forms)
+        SetAttackTime(WeaponAttackType(i), attackTime);  // If there is no weapon reset attack time to base (might have been changed from forms)
     }
 }
 
@@ -19475,7 +19475,7 @@ void Player::UpdateContestedPvP(uint32 diff)
 
 void Player::UpdatePvPFlag(time_t currTime)
 {
-    if (!IsPvP())
+    if (!IsPvP()  || InBattleground() || InArena() )
         return;
     if (pvpInfo.endTimer == 0 || currTime < (pvpInfo.endTimer + 300))
         return;
@@ -21039,6 +21039,17 @@ void Player::SendCooldownEvent(SpellEntry const *spellInfo, uint32 itemId, Spell
     data << uint64(GetGUID());
     SendDirectMessage(&data);
 }
+
+void Player::SendSpellCooldownEvent(SpellEntry const *spellInfo, uint32 unTimeMs)
+{
+	WorldPacket data(SMSG_SPELL_COOLDOWN, 8+1+4);
+	data << uint64(GetGUID());
+	data << uint8(0);
+	data << uint32(spellInfo->Id);
+	data << uint32(unTimeMs);
+	SendDirectMessage(&data);
+}
+
 
 void Player::UpdatePotionCooldown(Spell* spell)
 {

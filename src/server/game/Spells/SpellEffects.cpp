@@ -1661,7 +1661,8 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     if (AuraEffect const * aurEff = m_caster->GetDummyAuraEffect(SPELLFAMILY_WARLOCK, 208, 0))
                         mana = (aurEff->GetAmount() + 100)* mana / 100;
 
-                    m_caster->CastCustomSpell(unitTarget, 31818, &mana, NULL, NULL, true);
+					m_caster->ModifyPower(POWER_MANA, mana);
+                    //m_caster->CastCustomSpell(unitTarget, 31818, &mana, NULL, NULL, true);
 
                     // Mana Feed
                     int32 manaFeedVal = 0;
@@ -2674,7 +2675,7 @@ void Spell::EffectPowerBurn(SpellEffIndex effIndex)
 void Spell::EffectHeal(SpellEffIndex /*effIndex*/)
 {
     // Chakra Talent
-     if (m_caster->HasAura(14751))
+    if (m_caster->HasAura(14751))
     {
         switch(m_spellInfo->Id)
         {
@@ -3148,7 +3149,7 @@ void Spell::EffectEnergize(SpellEffIndex effIndex)
             level_diff = m_caster->getLevel() - 60;
             level_multiplier = 4;
             break;
-        case 31930:                                         // Judgements of the Wise
+        case 89906:                                         // Judgements of the Bold
         case 63375:                                         // Improved Stormstrike
         case 68082:                                         // Glyph of Seal of Command
             damage = damage * unitTarget->GetCreateMana() / 100;
@@ -5994,6 +5995,12 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
         }
         case SPELLFAMILY_WARLOCK:
         {
+			case 6201: 
+			  DoCreateItem(effIndex, 19005); 
+			  break; 
+			case 693: 
+			  DoCreateItem(effIndex, 5232); 
+			  break;		
             if (m_spellInfo->Id == 77801) // Demon Soul
             {
                 if (m_caster)
@@ -6021,38 +6028,14 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
             {
                 if (!unitTarget || !unitTarget->isAlive())
                     return;
-                uint32 spellId1 = 0;
-                uint32 spellId2 = 0;
-                uint32 spellId3 = 0;
 
-                // Judgement self add switch
-                switch (m_spellInfo->Id)
-                {
-                    case 53407: spellId1 = 20184; break;    // Judgement of Justice
-                    case 20271:                             // Judgement of Light
-                    case 57774: spellId1 = 20185; break;    // Judgement of Light
-                    case 53408: spellId1 = 20186; break;    // Judgement of Wisdom
-                    default:
-                        sLog->outError("Unsupported Judgement (seal trigger) spell (Id: %u) in Spell::EffectScriptEffect", m_spellInfo->Id);
-                        return;
-                }
-                // all seals have aura dummy in 2 effect
+                uint32 spellId = 0;
+
+
+                // Seal of Truth and Seal of Righteoussness have a dummy aura on effect 2
                 Unit::AuraApplicationMap & sealAuras = m_caster->GetAppliedAuras();
                 for (Unit::AuraApplicationMap::iterator iter = sealAuras.begin(); iter != sealAuras.end();)
                 {
-                    switch (iter->first)
-                    {
-                        // Heart of the Crusader
-                        case 20335: // Rank 1
-                            spellId3 = 21183;
-                            break;
-                        case 20336: // Rank 2
-                            spellId3 = 54498;
-                            break;
-                        case 20337: // Rank 3
-                            spellId3 = 54499;
-                            break;
-                    }
                     Aura * aura = iter->second->GetBase();
                     if (IsSealSpell(aura->GetSpellProto()))
                     {
@@ -6060,18 +6043,17 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                             if (aureff->GetAuraType() == SPELL_AURA_DUMMY)
                             {
                                 if (sSpellStore.LookupEntry(aureff->GetAmount()))
-                                    spellId2 = aureff->GetAmount();
+                                    spellId = aureff->GetAmount();
                                 break;
                             }
-                        if (!spellId2)
+                        if (!spellId)
                         {
                             switch (iter->first)
                             {
-                                // Seal of light, Seal of wisdom, Seal of justice
+                                // Seal of Insigth, Seal of Justice
                                 case 20165:
-                                case 20166:
                                 case 20164:
-                                    spellId2 = 54158;
+                                    spellId = 54158;
                             }
                         }
                         break;
@@ -6079,12 +6061,25 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     else
                         ++iter;
                 }
-                if (spellId1)
-                    m_caster->CastSpell(unitTarget, spellId1, true);
-                if (spellId2)
-                    m_caster->CastSpell(unitTarget, spellId2, true);
-                if (spellId3)
-                    m_caster->CastSpell(unitTarget, spellId3, true);
+                // Cast Judgement
+                if (spellId)
+                    m_caster->CastSpell(unitTarget, spellId, true);
+
+                // Check for Judgement dependent auras
+                Unit::AuraApplicationMap & talentauras = m_caster->GetAppliedAuras();
+                for (Unit::AuraApplicationMap::iterator iter = talentauras.begin(); iter != talentauras.end();)
+                {
+                    Aura * aura = iter->second->GetBase();
+                    switch (aura->GetId())
+                    {
+                        case 31876:
+                        {
+                            m_caster->CastSpell((Unit*)NULL,57669,true);
+                            break;
+                        }
+                    }
+                    ++iter;
+                }
                 return;
             }
         }
@@ -6164,10 +6159,31 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                         m_caster->CastSpell(unitTarget, 55095, true);
                 }
             }
+
+			// Festering Strike
+			if (m_spellInfo->Id == 85948)
+            {
+				int32 r = urand(2, 6);
+				if (unitTarget->HasAura(45524)) // Chains of Ice
+				{
+					unitTarget->GetAura(45524)->RefreshDuration();
+					unitTarget->GetAura(45524)->SetDuration((unitTarget->GetAura(45524)->GetDuration() + r * 1000), true);
+				}
+				if (unitTarget->HasAura(55095)) // Frost Fever
+				{
+					unitTarget->GetAura(55095)->RefreshDuration();
+                    unitTarget->GetAura(55095)->SetDuration((unitTarget->GetAura(55095)->GetDuration() + r * 1000), true);
+				}
+				if (unitTarget->HasAura(55078)) // Blood Plague
+				{
+					unitTarget->GetAura(55078)->RefreshDuration();
+                    unitTarget->GetAura(55078)->SetDuration((unitTarget->GetAura(55078)->GetDuration() + r * 1000), true);
+				}
+			}
             break;
         }
         case SPELLFAMILY_WARRIOR:
-        {
+		{
             // Shattering Throw
             if (m_spellInfo->SpellFamilyFlags[1] & 0x00400000)
             {

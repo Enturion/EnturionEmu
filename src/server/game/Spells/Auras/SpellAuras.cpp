@@ -1134,6 +1134,10 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                         target->SetSpeed(MOVE_RUN, 1.6f, true);
                     }
                 }
+                // Sanctfied Wrath Cataclysm proc
+                if (GetId() == 31884)
+                    if (caster->HasAura(53375) || caster->HasAura(53376) || caster->HasAura(90286))
+                        caster->CastSpell(caster,57318,true);
                 break;
             case SPELLFAMILY_DEATHKNIGHT:
                 if (!caster)
@@ -1589,6 +1593,13 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
         case SPELLFAMILY_PALADIN:
             switch(GetId())
             {
+        		case 25771: //Forbearance
+        		{
+        			target->ApplySpellImmune(GetId(), IMMUNITY_ID, 1022, apply);  // Hand of Protection
+        			target->ApplySpellImmune(GetId(), IMMUNITY_ID, 642, apply);   // Divine Shield
+        			target->ApplySpellImmune(GetId(), IMMUNITY_ID, 633, apply);  // Lay on Hands
+        			break;
+        		}
                 case 19746:
                 case 31821:
                     // Aura Mastery Triggered Spell Handler
