@@ -54,13 +54,28 @@ EndScriptData */
 #define SAY_HUNTER              -1469020
 #define SAY_ROGUE               -1469021
 
-#define SPELL_SHADOWFLAME_INITIAL   22972
-#define SPELL_SHADOWFLAME           22539
-#define SPELL_BELLOWINGROAR         22686
-#define SPELL_VEILOFSHADOW          7068
-#define SPELL_CLEAVE                20691
-#define SPELL_TAILLASH              23364
-#define SPELL_BONECONTRUST          23363                   //23362, 23361
+#define SPELL_BERSERK_ALL               26662
+#define CHILDREN_OF_DEATHWING_ALL       78620
+#define SPELL_DOMINION_H                79318
+#define SPELL_EXPLOSIVE_CINDERS_H       79339
+#define SPELL_HAIL_OF_BONES_H10         94105
+#define SPELL_HAIL_OF_BONES_N10         78684
+#define SPELL_HAIL_OF_BONES_N25         94104               //
+#define SPELL_HAIL_OF_BONES_H25         94106
+#define SPELL_SHADOW_OF_COWARDIGE_ALL   79353
+#define SPELL_SHADOWBLAZE_SPARK_ALL     81031
+#define SPELL_SHADOWFLAME_BARRAGE_N25   94121
+#define SPELL_SHADOWFLAME_BARRAGE_H25   94123
+#define SPELL_SHADOWFLAME_BARRAGE_N10   78621
+#define SPELL_SHADOWFLAME_BARRAGE_H10   94122
+#define SPELL_SHADOWFLAME_BREATH_H10    94125
+#define SPELL_SHADOWFLAME_BREATH_N25    94124
+#define SPELL_SHADOWFLAME_BREATH_H25    94126
+#define SPELL_SHADOWFLAME_BREATH_N10    77826
+#define SPELL_TAIL_LASH_H10             94129
+#define SPELL_TAIL_LASH_N10             77827
+#define SPELL_TAIL_LASH_N25             94128
+#define SPELL_TAIL_LASH_H25             94130
 
 #define SPELL_MAGE                  23410                   //wild magic
 #define SPELL_WARRIOR               23397                   //beserk
@@ -86,11 +101,16 @@ public:
     {
         boss_nefarian2AI(Creature *c) : ScriptedAI(c) {}
 
-        uint32 ShadowFlame_Timer;
-        uint32 BellowingRoar_Timer;
-        uint32 VeilOfShadow_Timer;
-        uint32 Cleave_Timer;
-        uint32 TailLash_Timer;
+        uint32 Berserk_Timer;
+		uint32 Children_of_Deathwing_Timer;
+		uint32 Dominion_Timer;
+		uint32 Explosive_Cinders_Timer;
+		uint32 Hail_of_Bones_Timer;
+		uint32 Shadow_of_Cowardige_Timer;
+		uint32 Shadowblaze_Spark_Timer;
+		uint32 Shadowflame_Barrage_Timer;
+        uint32 Shadowflame_Breath_Timer;
+        uint32 Tail_Lash_Timer;
         uint32 ClassCall_Timer;
         bool Phase3;
 
@@ -98,11 +118,16 @@ public:
 
         void Reset()
         {
-            ShadowFlame_Timer = 12000;                          //These times are probably wrong
-            BellowingRoar_Timer = 30000;
-            VeilOfShadow_Timer = 15000;
-            Cleave_Timer = 7000;
-            TailLash_Timer = 10000;
+			Berserk_Timer = 15000;
+			Children_of_Deathwing_Timer = 20000;
+			Dominion_Timer = 25000;
+			Explosive_Cinders_Timer = 17000;
+			Hail_of_Bones_Timer = 15000;
+			Shadow_of_Cowardige_Timer = 30000;
+			Shadowblaze_Spark_Timer = 25000;
+            Shadowflame_Barrage_Timer = 12000;                          //These times are probably wrong
+            Shadowflame_Breath_Timer = 7000;
+            Tail_Lash_Timer = 10000;
             ClassCall_Timer = 35000;                            //35-40 seconds
             Phase3 = false;
 
@@ -126,7 +151,7 @@ public:
         {
             DoScriptText(RAND(SAY_XHEALTH, SAY_AGGRO, SAY_SHADOWFLAME), me);
 
-            DoCast(who, SPELL_SHADOWFLAME_INITIAL);
+            DoCast(who, CHILDREN_OF_DEATHWING_ALL);
             DoZoneInCombat();
         }
 
@@ -142,42 +167,75 @@ public:
             if (!UpdateVictim())
                 return;
 
-            //ShadowFlame_Timer
-            if (ShadowFlame_Timer <= diff)
+            //Shadowflame_Barrage_Timer
+            if (Shadowflame_Barrage_Timer <= diff)
             {
-                DoCast(me->getVictim(), SPELL_SHADOWFLAME);
-                ShadowFlame_Timer = 12000;
-            } else ShadowFlame_Timer -= diff;
+                DoCast(me->getVictim(), SPELL_SHADOWFLAME_BARRAGE_N10);
+                Shadowflame_Barrage_Timer = 12000;
+            } else Shadowflame_Barrage_Timer -= diff;
 
-            //BellowingRoar_Timer
-            if (BellowingRoar_Timer <= diff)
+            //Hail_of_Bones_Timer
+            if (Hail_of_Bones_Timer <= diff)
             {
-                DoCast(me->getVictim(), SPELL_BELLOWINGROAR);
-                BellowingRoar_Timer = 30000;
-            } else BellowingRoar_Timer -= diff;
+                DoCast(me->getVictim(), SPELL_HAIL_OF_BONES_H10);
+                Hail_of_Bones_Timer = 15000;
+            } else Hail_of_Bones_Timer -= diff;
 
-            //VeilOfShadow_Timer
-            if (VeilOfShadow_Timer <= diff)
+            //Berserk_Timer
+            if (Berserk_Timer <= diff)
             {
-                DoCast(me->getVictim(), SPELL_VEILOFSHADOW);
-                VeilOfShadow_Timer = 15000;
-            } else VeilOfShadow_Timer -= diff;
+                DoCast(me->getVictim(), SPELL_BERSERK_ALL);
+                Berserk_Timer = 15000;
+            } else Berserk_Timer -= diff;
 
-            //Cleave_Timer
-            if (Cleave_Timer <= diff)
+            //Shadowflame_Breath_Timer
+            if (Shadowflame_Breath_Timer <= diff)
             {
-                DoCast(me->getVictim(), SPELL_CLEAVE);
-                Cleave_Timer = 7000;
-            } else Cleave_Timer -= diff;
+                DoCast(me->getVictim(), SPELL_SHADOWFLAME_BREATH_H10);
+                Shadowflame_Breath_Timer = 7000;
+            } else Shadowflame_Breath_Timer -= diff;
 
-            //TailLash_Timer
-            if (TailLash_Timer <= diff)
+            //Tail_Lash_Timer
+            if (Tail_Lash_Timer <= diff)
             {
-                //Cast NYI since we need a better check for behind target
-                //DoCast(me->getVictim(), SPELL_TAILLASH);
+                DoCast(me->getVictim(), SPELL_TAIL_LASH_H10);
+                Tail_Lash_Timer = 10000;
+            } else Tail_Lash_Timer -= diff;
 
-                TailLash_Timer = 10000;
-            } else TailLash_Timer -= diff;
+			//Children_of_Deathwing_Timer
+            if (Children_of_Deathwing_Timer <= diff)
+            {
+                DoCast(me->getVictim(), CHILDREN_OF_DEATHWING_ALL);
+                Children_of_Deathwing_Timer = 20000;
+            } else Children_of_Deathwing_Timer -= diff;
+
+			//Dominion_Timer
+            if (Dominion_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_DOMINION_H);
+                Dominion_Timer = 25000;
+            } else Dominion_Timer -= diff;
+
+			//Explosive_Cinders_Timer
+            if (Explosive_Cinders_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_EXPLOSIVE_CINDERS_H);
+                Explosive_Cinders_Timer = 17000;
+            } else Explosive_Cinders_Timer -= diff;
+
+			//Shadow_of_Cowardige_Timer
+            if (Explosive_Cinders_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_SHADOW_OF_COWARDIGE_ALL);
+                Shadow_of_Cowardige_Timer = 30000;
+            } else Shadow_of_Cowardige_Timer -= diff;
+
+			//Shadowblaze_Spark_Timer
+            if (Shadowblaze_Spark_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_SHADOWBLAZE_SPARK_ALL);
+                Shadowblaze_Spark_Timer = 25000;
+            } else Shadowblaze_Spark_Timer -= diff;
 
             //ClassCall_Timer
             if (ClassCall_Timer <= diff)
