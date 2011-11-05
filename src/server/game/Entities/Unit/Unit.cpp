@@ -5106,25 +5106,10 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 }
                 // Eye for an Eye
                 case 9799:
-                {
-                    // return damage % to attacker but < 50% own total health
-                    basepoints0 = 5*int32(damage)/100;
-                    if (basepoints0 > GetMaxHealth()/2)
-                        basepoints0 = GetMaxHealth()/2;
-
-                    triggered_spell_id = 25997;
-
-                    break;
-                }
                 case 25988:
                 {
                     // return damage % to attacker but < 50% own total health
-                    // basepoints0 = int32((triggerAmount * damage) /100);
-					basepoints0 = 10*int32(damage)/100;
-                    int32 halfMaxHealth = int32(CountPctFromMaxHealth(50));
-                    if (basepoints0 > halfMaxHealth)
-                        basepoints0 = halfMaxHealth;
-
+                    basepoints0 = int32(std::min(CalculatePctN(damage, triggerAmount), CountPctFromMaxHealth(50)));
                     triggered_spell_id = 25997;
 
                     break;
@@ -6645,6 +6630,24 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 basepoints0 = (int32)GetAttackTime(BASE_ATTACK) * int32(ap * 0.011f + 0.022f * holy) / 1000;
                 break;
             }
+             // Sacred Shield
+             if (dummySpell->SpellFamilyFlags[1]&0x00080000)
+             {
+                 if (procFlag & PROC_FLAG_TAKEN_SPELL_MAGIC_DMG_CLASS_POS)
+                 {
+                     if (procSpell->SpellFamilyFlags[0] & 0x40000000)
+                     {
+                         basepoints0 = int32(float(damage)/12.0f);
+                         CastCustomSpell(this,66922,&basepoints0,NULL,NULL,true,0,triggeredByAura, pVictim->GetGUID());
+                         return true;
+                     }
+                     else
+                         return false;
+                 }
+                 else if (damage > 0)
+	                 target = this;
+                 break;
+             }
             // Light's Beacon - Beacon of Light
             if (dummySpell->Id == 53651)
             {
@@ -6668,6 +6671,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 }
                 return false;
             }
+
             // Righteous Vengeance
             if (dummySpell->SpellIconID == 3025)
             {
