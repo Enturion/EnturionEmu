@@ -76,7 +76,7 @@ pEffect SpellEffects[TOTAL_SPELL_EFFECTS]=
     &Spell::EffectUnused,                                   //  4 SPELL_EFFECT_PORTAL_TELEPORT          unused
     &Spell::EffectTeleportUnits,                            //  5 SPELL_EFFECT_TELEPORT_UNITS
     &Spell::EffectApplyAura,                                //  6 SPELL_EFFECT_APPLY_AURA
-    &Spell::EffectEnvirinmentalDMG,                         //  7 SPELL_EFFECT_ENVIRONMENTAL_DAMAGE
+    &Spell::EffectEnvironmentalDMG,                         //  7 SPELL_EFFECT_ENVIRONMENTAL_DAMAGE
     &Spell::EffectPowerDrain,                               //  8 SPELL_EFFECT_POWER_DRAIN
     &Spell::EffectHealthLeech,                              //  9 SPELL_EFFECT_HEALTH_LEECH
     &Spell::EffectHeal,                                     // 10 SPELL_EFFECT_HEAL
@@ -316,7 +316,7 @@ void Spell::EffectInstaKill(SpellEffIndex /*effIndex*/)
     m_caster->DealDamage(unitTarget, unitTarget->GetHealth(), NULL, NODAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 }
 
-void Spell::EffectEnvirinmentalDMG(SpellEffIndex effIndex)
+void Spell::EffectEnvironmentalDMG(SpellEffIndex effIndex)
 {
     uint32 absorb = 0;
     uint32 resist = 0;
@@ -641,19 +641,55 @@ void Spell::SpellDamageSchoolDmg(SpellEffIndex effIndex)
             }
             case SPELLFAMILY_PRIEST:
             {
-              // Evangelism
-                if (m_caster->HasAura(81659)) // Rank 1
+                switch (m_spellInfo->Id)
                 {
-                    if (m_spellInfo->Id == 585)
+                    case 73413:  // inner will
+                        m_caster->RemoveAurasDueToSpell(588);
+                        break;
+                    case 588:    // inner fire
+                        m_caster->RemoveAurasDueToSpell(73413);
+                         break;
+                }
+
+                if (m_spellInfo->Id == 589 || m_spellInfo->Id == 15407)  //Shadow Word: Pain | mind flay
+                {
+                    if (m_caster->HasSpell(95740))   // Shadow Orbs
+                    {
+                        int chance = 10;
+
+                        if (m_caster->HasAura(33191)) // Harnessed Shadows rank1
+                            chance += 4;
+                        else if(m_caster->HasAura(78228))  // Harnessed Shadows rank2
+                            chance += 8;
+
+                        if (roll_chance_i(chance))
+                            m_caster->CastSpell(m_caster, 77487, true);
+                    }
+                }
+
+                if (m_caster->HasAura(81659)) // Evangelism Rank 1
+                {
+                    if (m_spellInfo->Id == 585 || m_spellInfo->Id == 14914 || m_spellInfo->Id == 15407)  // Smite | Holy Fire | mind flay
                         m_caster->CastSpell(m_caster, 81660, true);
                 }
-                else
 
-                if (m_caster->HasAura(81662)) // Rank 2
+                if (m_caster->HasAura(81662)) // Evangelism Rank 2
                 {
-                    if (m_spellInfo->Id == 585)
+                    if (m_spellInfo->Id == 585 || m_spellInfo->Id == 14914 || m_spellInfo->Id == 15407)  // Smite | Holy Fire | mind flay
                         m_caster->CastSpell(m_caster, 81661, true);
                 }
+                //Dark Evangelism  not implemented yet
+                if (m_caster->HasAura(81659))                     // Evangelism rank 1
+                {
+                    if (m_spellInfo->Id == 15407)                   //  Mind Flay
+                        m_caster->CastSpell(m_caster,87117,true);   // Dark Evangelism
+                }
+                else if (m_caster->HasAura(81662))                  // Evangelism rank 2
+                {
+                    if (m_spellInfo->Id == 15407)                   //  Mind Flay
+                        m_caster->CastSpell(m_caster,87118,true);   // Dark Evangelism
+                }
+                break;
 
                 // Chakra
                 if (m_caster->HasAura(14751))
@@ -2557,6 +2593,17 @@ void Spell::EffectApplyAura(SpellEffIndex effIndex)
             }
         }
     }
+
+    switch (m_spellAura->GetId())
+    {
+        case 38177:  // Blackwhelp Net
+            if (unitTarget->GetEntry() != 21387) //Wyrmcult Blackwhelp
+                return;
+        case 85673:  // Word of Glory
+            if (!m_caster->HasAura(93466))
+                return;
+    }
+
     ASSERT(unitTarget == m_spellAura->GetOwner());
     m_spellAura->_ApplyEffectForTargets(effIndex);
 }

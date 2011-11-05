@@ -5109,12 +5109,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 case 25988:
                 {
                     // return damage % to attacker but < 50% own total health
-                    basepoints0 = int32((triggerAmount * damage) /100);
-
-                    int32 halfMaxHealth = int32(CountPctFromMaxHealth(50));
-                    if (basepoints0 > halfMaxHealth)
-                        basepoints0 = halfMaxHealth;
-
+                    basepoints0 = int32(std::min(CalculatePctN(damage, triggerAmount), CountPctFromMaxHealth(50)));
                     triggered_spell_id = 25997;
 
                     break;
@@ -6635,6 +6630,24 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 basepoints0 = (int32)GetAttackTime(BASE_ATTACK) * int32(ap * 0.011f + 0.022f * holy) / 1000;
                 break;
             }
+             // Sacred Shield
+             if (dummySpell->SpellFamilyFlags[1]&0x00080000)
+             {
+                 if (procFlag & PROC_FLAG_TAKEN_SPELL_MAGIC_DMG_CLASS_POS)
+                 {
+                     if (procSpell->SpellFamilyFlags[0] & 0x40000000)
+                     {
+                         basepoints0 = int32(float(damage)/12.0f);
+                         CastCustomSpell(this,66922,&basepoints0,NULL,NULL,true,0,triggeredByAura, pVictim->GetGUID());
+                         return true;
+                     }
+                     else
+                         return false;
+                 }
+                 else if (damage > 0)
+	                 target = this;
+                 break;
+             }
             // Light's Beacon - Beacon of Light
             if (dummySpell->Id == 53651)
             {
@@ -6658,6 +6671,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 }
                 return false;
             }
+
             // Righteous Vengeance
             if (dummySpell->SpellIconID == 3025)
             {
@@ -6681,9 +6695,12 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 // Judgements of the Bold
                 case 89901:
                 {
-                    target = this;
-                    triggered_spell_id = 89906;
-                    break;
+					if (roll_chance_f(triggerAmount) && !this->IsWithinDistInMap(pVictim, 15.0f))
+					{
+						target = this;
+						triggered_spell_id = 89906;
+						break;
+					}
                 }
                 // Long Arm of The law
                 case 87168:
@@ -8983,6 +9000,16 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, AuraEffect* trig
                 return false;
             // critters are not allowed
             if (pVictim->GetCreatureType() == CREATURE_TYPE_CRITTER)
+                return false;
+            break;
+        }
+
+		// Incite:
+        // gives your Heroic Strike criticals a 100% chance to cause the next Heroic Strike to also be a critical strike.
+        // These guaranteed criticals cannot re-trigger the Incite effect.
+        case 86627:
+        {
+            if (HasAura(86627))
                 return false;
             break;
         }
