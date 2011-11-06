@@ -1492,6 +1492,27 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
         {
             switch (m_spellInfo->Id)
             {
+				case 87151:		// Archangel (Evangelism) 
+				{
+					
+					if (Aura* evangelism = m_caster->GetAura(81661))
+					{
+						int32 bp = 3 * evangelism->GetStackAmount();
+						m_caster->CastCustomSpell(m_caster, 81700, &bp, NULL, NULL, true, 0, 0, m_caster->GetGUID());
+						m_caster->CastSpell(m_caster, 87152, true);
+					}
+					// Dark Archangel (Dark Evangelism)
+					if (Aura* darkEvangelism = m_caster->GetAura(87118))
+					{
+						int32 bp = 4 * darkEvangelism->GetStackAmount();
+						int32 mana = 5;
+						m_caster->CastCustomSpell(m_caster, 87153, &bp, &bp, NULL, true, 0, 0, m_caster->GetGUID());
+						m_caster->CastCustomSpell(m_caster, 87152, &mana, NULL, NULL, true, 0, 0, m_caster->GetGUID());
+					}
+					m_caster->RemoveAurasDueToSpell(81661);
+					m_caster->RemoveAurasDueToSpell(87118);
+
+				}
                 case 73325: // Leap of faith
                 {
                     unitTarget->CastSpell(m_caster, 92832, false);

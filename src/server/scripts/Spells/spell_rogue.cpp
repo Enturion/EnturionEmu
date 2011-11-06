@@ -178,7 +178,8 @@ class spell_rog_preparation : public SpellScriptLoader
                     {
                         if (spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_ROGUE_COLDB_SHADOWSTEP ||      // Cold Blood, Shadowstep
                             spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_ROGUE_VAN_EVAS_SPRINT)           // Vanish, Evasion, Sprint
-                            caster->ToPlayer()->RemoveSpellCooldown((itr++)->first, true);
+							if ( spellInfo->Id != 14185 || spellInfo->Id != 14177 ) // Preparation do not reset Evasion cooldown !!
+								caster->ToPlayer()->RemoveSpellCooldown((itr++)->first, true);
                         else if (caster->HasAura(ROGUE_SPELL_GLYPH_OF_PREPARATION))
                         {
                             if (spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_ROGUE_DISMANTLE ||         // Dismantle
