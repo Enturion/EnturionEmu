@@ -41,6 +41,8 @@ enum Spells
 	SPELL_TAIL_LASH_10H3TH = 94129,
     };
 
+#define SAY_NEFARIAN_TO_ME		-1000005
+
 struct sOnyxMove
 {
     uint32 uiLocId;
@@ -194,9 +196,9 @@ public:
 				//Spell m_uiSpellTimerSummTwister timer
 				if (m_uiSpellTimerSummTwister <= uiDiff)
 				{
-					 for (int i=0; i < 3; i++) 
+					 for (int i=0; i < 4; i++) 
 					 {
-						me->SummonCreature(41918, 0.0f, 0.0f, 0.0f, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+						me->SummonCreature(41918, -88.118896f, -235.529007f, 14.072900f, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
 					 }
 
 					 DoCast(me->getVictim(), SPELL_CHILDREN_OF_DEATHWING);
@@ -208,7 +210,8 @@ public:
 
 				if( (me->GetHealth() < me->GetMaxHealth() / 4 ) && (!summoned_Nefarian)   ) 
 				{
-					me->SummonCreature(NPC_NEFARIAN, 0.0f, 0.0f, 0.0f, 0, TEMPSUMMON_CORPSE_DESPAWN, 4800000);  // will be sufficent ? si caliamo un po il summon che ne tira su
+					DoScriptText(SAY_NEFARIAN_TO_ME, me);
+					me->SummonCreature(NPC_NEFARIAN, -88.118896f, -235.529007f, 14.072900f, 0, TEMPSUMMON_CORPSE_DESPAWN);  // will be sufficent ? si caliamo un po il summon che ne tira su
 					summoned_Nefarian = true; // to prevent the continuos spawn of nefy 
 				}
 /*
