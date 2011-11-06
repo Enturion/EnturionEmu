@@ -173,13 +173,14 @@ class spell_rog_preparation : public SpellScriptLoader
                 for (SpellCooldowns::const_iterator itr = cm.begin(); itr != cm.end();)
                 {
                     SpellEntry const *spellInfo = sSpellStore.LookupEntry(itr->first);
+					if ( spellInfo->Id != 14185 || spellInfo->Id != 14177 ) // Preparation do not reset Evasion cooldown !!
+						return;
 
                     if (spellInfo->SpellFamilyName == SPELLFAMILY_ROGUE)
                     {
                         if (spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_ROGUE_COLDB_SHADOWSTEP ||      // Cold Blood, Shadowstep
                             spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_ROGUE_VAN_EVAS_SPRINT)           // Vanish, Evasion, Sprint
-							if ( spellInfo->Id != 14185 || spellInfo->Id != 14177 ) // Preparation do not reset Evasion cooldown !!
-								caster->ToPlayer()->RemoveSpellCooldown((itr++)->first, true);
+                            caster->ToPlayer()->RemoveSpellCooldown((itr++)->first, true);
                         else if (caster->HasAura(ROGUE_SPELL_GLYPH_OF_PREPARATION))
                         {
                             if (spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_ROGUE_DISMANTLE ||         // Dismantle
