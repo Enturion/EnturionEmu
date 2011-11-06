@@ -54,28 +54,32 @@ EndScriptData */
 #define SAY_HUNTER              -1469020
 #define SAY_ROGUE               -1469021
 
-#define SPELL_BERSERK_ALL               26662
-#define CHILDREN_OF_DEATHWING_ALL       78620
-#define SPELL_DOMINION_H                79318
-#define SPELL_EXPLOSIVE_CINDERS_H       79339
-#define SPELL_HAIL_OF_BONES_H10         94105
-#define SPELL_HAIL_OF_BONES_N10         78684
-#define SPELL_HAIL_OF_BONES_N25         94104               //
-#define SPELL_HAIL_OF_BONES_H25         94106
-#define SPELL_SHADOW_OF_COWARDIGE_ALL   79353
-#define SPELL_SHADOWBLAZE_SPARK_ALL     81031
-#define SPELL_SHADOWFLAME_BARRAGE_N25   94121
-#define SPELL_SHADOWFLAME_BARRAGE_H25   94123
-#define SPELL_SHADOWFLAME_BARRAGE_N10   78621
-#define SPELL_SHADOWFLAME_BARRAGE_H10   94122
-#define SPELL_SHADOWFLAME_BREATH_H10    94125
-#define SPELL_SHADOWFLAME_BREATH_N25    94124
-#define SPELL_SHADOWFLAME_BREATH_H25    94126
-#define SPELL_SHADOWFLAME_BREATH_N10    77826
-#define SPELL_TAIL_LASH_H10             94129
-#define SPELL_TAIL_LASH_N10             77827
-#define SPELL_TAIL_LASH_N25             94128
-#define SPELL_TAIL_LASH_H25             94130
+enum Spells 
+{	//Spell list
+
+ SPELL_BERSERK_ALL		          =  26662,
+ SPELL_CHILDREN_OF_DEATHWING_ALL  =  78620,
+ SPELL_DOMINION_H                 =  79318,
+ SPELL_EXPLOSIVE_CINDERS_H        =  79339,
+ SPELL_HAIL_OF_BONES_H10          =  94105,
+ SPELL_HAIL_OF_BONES_N10          =  78684,
+ SPELL_HAIL_OF_BONES_N25          =  94104,               //
+ SPELL_HAIL_OF_BONES_H25          =  94106,
+ SPELL_SHADOW_OF_COWARDIGE_ALL    =  79353,
+ SPELL_SHADOWBLAZE_SPARK_ALL      =  81031,
+ SPELL_SHADOWFLAME_BARRAGE_N25    =  94121,
+ SPELL_SHADOWFLAME_BARRAGE_H25    =  94123,
+ SPELL_SHADOWFLAME_BARRAGE_N10    =  78621,
+ SPELL_SHADOWFLAME_BARRAGE_H10    =  94122,
+ SPELL_SHADOWFLAME_BREATH_H10     =  94125,
+ SPELL_SHADOWFLAME_BREATH_N25     =  94124,
+ SPELL_SHADOWFLAME_BREATH_H25     =  94126,
+ SPELL_SHADOWFLAME_BREATH_N10     =  77826,
+ SPELL_TAIL_LASH_H10              =  94129,
+ SPELL_TAIL_LASH_N10              =  77827,
+ SPELL_TAIL_LASH_N25              =  94128,
+ SPELL_TAIL_LASH_H25              =  94130,
+ };
 
 #define SPELL_MAGE                  23410                   //wild magic
 #define SPELL_WARRIOR               23397                   //beserk
@@ -131,7 +135,7 @@ public:
             ClassCall_Timer = 35000;                            //35-40 seconds
             Phase3 = false;
 
-            DespawnTimer = 5000;
+            DespawnTimer = 5000000;
         }
 
         void KilledUnit(Unit* Victim)
@@ -151,7 +155,7 @@ public:
         {
             DoScriptText(RAND(SAY_XHEALTH, SAY_AGGRO, SAY_SHADOWFLAME), me);
 
-            DoCast(who, CHILDREN_OF_DEATHWING_ALL);
+            DoCast(who, SPELL_CHILDREN_OF_DEATHWING_ALL);
             DoZoneInCombat();
         }
 
@@ -205,7 +209,7 @@ public:
 			//Children_of_Deathwing_Timer
             if (Children_of_Deathwing_Timer <= diff)
             {
-                DoCast(me->getVictim(), CHILDREN_OF_DEATHWING_ALL);
+                DoCast(me->getVictim(), SPELL_CHILDREN_OF_DEATHWING_ALL);
                 Children_of_Deathwing_Timer = 20000;
             } else Children_of_Deathwing_Timer -= diff;
 
