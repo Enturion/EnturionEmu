@@ -174,7 +174,7 @@ class spell_rog_preparation : public SpellScriptLoader
                 {
                     SpellEntry const *spellInfo = sSpellStore.LookupEntry(itr->first);
 					if ( spellInfo->Id != 14185 || spellInfo->Id != 14177 ) // Preparation do not reset Evasion cooldown !!
-						return;
+						continue;
 
                     if (spellInfo->SpellFamilyName == SPELLFAMILY_ROGUE)
                     {
