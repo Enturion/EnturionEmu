@@ -173,6 +173,8 @@ class spell_rog_preparation : public SpellScriptLoader
                 for (SpellCooldowns::const_iterator itr = cm.begin(); itr != cm.end();)
                 {
                     SpellEntry const *spellInfo = sSpellStore.LookupEntry(itr->first);
+					if ( spellInfo->Id != 14185 || spellInfo->Id != 14177 ) // Preparation do not reset Evasion cooldown !!
+						return;
 
                     if (spellInfo->SpellFamilyName == SPELLFAMILY_ROGUE)
                     {
