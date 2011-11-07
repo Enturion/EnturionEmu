@@ -170,32 +170,29 @@ class spell_rog_preparation : public SpellScriptLoader
 
                 //immediately finishes the cooldown on certain Rogue abilities
                 const SpellCooldowns& cm = caster->ToPlayer()->GetSpellCooldownMap();
-                for (SpellCooldowns::const_iterator itr = cm.begin(); itr != cm.end();)
+                for (SpellCooldowns::const_iterator itr = cm.begin(); itr != cm.end();itr++)
                 {
                     SpellEntry const *spellInfo = sSpellStore.LookupEntry(itr->first);
-					if ( spellInfo->Id != 14185 || spellInfo->Id != 14177 ) // Preparation do not reset Evasion cooldown !!
+					if ( spellInfo->Id == 14185 || spellInfo->Id == 14177 || spellInfo->Id == 5277) // Preparation do not reset Evasion and Cold Blood cooldown !!
+					{	
+						//itr++;
 						continue;
+					}
 
                     if (spellInfo->SpellFamilyName == SPELLFAMILY_ROGUE)
                     {
                         if (spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_ROGUE_COLDB_SHADOWSTEP ||      // Cold Blood, Shadowstep
                             spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_ROGUE_VAN_EVAS_SPRINT)           // Vanish, Evasion, Sprint
-                            caster->ToPlayer()->RemoveSpellCooldown((itr++)->first, true);
+                            caster->ToPlayer()->RemoveSpellCooldown((itr)->first, true);
                         else if (caster->HasAura(ROGUE_SPELL_GLYPH_OF_PREPARATION))
                         {
                             if (spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_ROGUE_DISMANTLE ||         // Dismantle
                                 spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_ROGUE_KICK ||               // Kick
                                 (spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_ROGUE_BLADE_FLURRY &&     // Blade Flurry
                                 spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_ROGUE_BLADE_FLURRY))
-                                caster->ToPlayer()->RemoveSpellCooldown((itr++)->first, true);
-                            else
-                                ++itr;
+                                caster->ToPlayer()->RemoveSpellCooldown((itr)->first, true);
                         }
-                        else
-                            ++itr;
                     }
-                    else
-                        ++itr;
                 }
             }
 
