@@ -16,7 +16,7 @@
  */
 
 #include"ScriptPCH.h"
-#include"The_vortex_pinnacle.h"
+#include"the_vortex_pinnacle.h"
 
 enum eEvents
 {
