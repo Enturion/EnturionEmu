@@ -165,7 +165,7 @@ public:
             {
                 if (!UpdateVictim())
                     me->ForcedDespawn();
-                DespawnTimer = 5000;
+                DespawnTimer = 5000000;
             } else DespawnTimer -= diff;
 
             if (!UpdateVictim())
