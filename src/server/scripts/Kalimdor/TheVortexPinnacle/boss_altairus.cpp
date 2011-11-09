@@ -50,7 +50,7 @@ class boss_altairus : public CreatureScript
 				pInstance = pCreature->GetInstanceScript();
 			}
 
-			InstanceScript* pInstance;
+			InstanceScript *pInstance;
             EventMap events;
             SummonList Summons;
             bool check_in;
@@ -114,72 +114,74 @@ class boss_altairus : public CreatureScript
 								
 				events.Update(uiDiff);
 
+				//Spell STOP CTW timer
+	            if (m_uiSpellTimerCTW <= uiDiff && isCTW)
+	            {
+					if (me->HasAura(SPELL_CALL_THE_WIND))
+						me-> RemoveAurasDueToSpell(SPELL_CALL_THE_WIND);
+	                DoCast(me, SPELL_STOP_CALL_THE_WIND);
+					m_uiSpellTimerCTW_stop = urand(2000,5000);
+					isCTW = false;
+	            }
+	            else if ( isCTW ) 
+	                m_uiSpellTimerCTW -= uiDiff;
+
+				//Spell CTW timer
+				if (m_uiSpellTimerCTW_stop <= uiDiff && !isCTW)
+	            {
+	                    DoCast(me, SPELL_CALL_THE_WIND);
+						windOrientation = me->GetOrientation();
+						m_uiSpellTimerCTW = urand(10000,20000);
+						isCTW = true;
+	            }
+	            else if ( !isCTW ) 
+	                m_uiSpellTimerCTW_stop -= uiDiff;
+
                 if (me->HasUnitState(UNIT_STAT_CASTING))
                     return;
 
-	                //Spell CTW timer
-	                if (m_uiSpellTimerCTW_stop <= uiDiff && !isCTW)
-	                {
-	                        DoCast(me, SPELL_CALL_THE_WIND);
-							windOrientation = me->GetOrientation();
-							m_uiSpellTimerCTW = urand(10000,20000);
-							isCTW = true;
-	                }
-	                else if ( !isCTW ) 
-	                    m_uiSpellTimerCTW_stop -= uiDiff;
-
-					//Spell STOP CTW timer
-	                if (m_uiSpellTimerCTW <= uiDiff && isCTW)
-	                {
-	                        DoCast(me, SPELL_STOP_CALL_THE_WIND);
-							m_uiSpellTimerCTW_stop = urand(2000,5000);
-							isCTW = false;
-	                }
-	                else if ( isCTW ) 
-	                    m_uiSpellTimerCTW -= uiDiff;
+	            //Spell CB timer
+	            if (m_uiSpellTimerCB <= uiDiff)
+	            {
+	                //Cast spell two on our current target.
+	                DoCast(me->getVictim(), SPELL_CHILLING_BREATH);
+	                m_uiSpellTimerCB = urand(10000,20000);
+	            }
+	            else
+	                m_uiSpellTimerCB -= uiDiff;
 	
-	                //Spell CB timer
-	                if (m_uiSpellTimerCB <= uiDiff)
-	                {
-	                    //Cast spell two on our current target.
-	                    DoCast(me->getVictim(), SPELL_CHILLING_BREATH);
-	                    m_uiSpellTimerCB = urand(10000,20000);
-	                }
-	                else
-	                    m_uiSpellTimerCB -= uiDiff;
-	
-					//Spell LB timer
-					if (m_uiSpellTimerLB <= uiDiff)
-					{
-						//Cast spell one on our current target.
-						DoCast(me->getVictim(), SPELL_LIGHTING_BLAST);
+				//Spell LB timer
+				if (m_uiSpellTimerLB <= uiDiff)
+				{
+					//Cast spell one on our current target.
+					DoCast(me->getVictim(), SPELL_LIGHTING_BLAST);
 
-						m_uiSpellTimerLB = urand(10000,20000);
-					}
-					else
-						m_uiSpellTimerLB -= uiDiff;
+					m_uiSpellTimerLB = urand(10000,20000);
+				}
+				else
+					m_uiSpellTimerLB -= uiDiff;
 
-					//Spell m_uiSpellTimerSummTwister timer
-					if (m_uiSpellTimerSummTwister <= uiDiff)
-					{
-						//Cast spell one on our current target.
-						me->SummonCreature(47342, 0.0f, 0.0f, 0.0f, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-                        DoCast(me->getVictim(), SPELL_TWISTING_WINDS);
+				//Spell m_uiSpellTimerSummTwister timer
+				if (m_uiSpellTimerSummTwister <= uiDiff)
+				{
+					//Cast spell one on our current target.
+					me->SummonCreature(47342, 0.0f, 0.0f, 0.0f, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                    DoCast(me->getVictim(), SPELL_TWISTING_WINDS);
 
-						m_uiSpellTimerSummTwister = 3000;
-					}
-					else
-						m_uiSpellTimerSummTwister -= uiDiff;
+					m_uiSpellTimerSummTwister = 3000;
+				}
+				else
+					m_uiSpellTimerSummTwister -= uiDiff;
 
-					Map* pMap = me->GetMap();
-                    Map::PlayerList const &PlayerList = pMap->GetPlayers();
-                    for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                        if (Player* i_pl = i->getSource())
-                            if (i_pl->isAlive())
-								if ( i_pl->isInFrontInMap(NULL , 4 , windOrientation ) )
-									DoCast(i_pl,  SPELL_UPWIND_OF_ALTAIRUS);
-								else 
-									DoCast(i_pl,  SPELL_DOWNWIND_OF_ALTAIRUS);
+				Map* pMap = me->GetMap();
+                Map::PlayerList const &PlayerList = pMap->GetPlayers();
+                for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                    if (Player* i_pl = i->getSource())
+                        if (i_pl->isAlive())
+							if ( i_pl->isInFrontInMap(NULL , 4 , windOrientation ) )
+								DoCast(i_pl,  SPELL_UPWIND_OF_ALTAIRUS);
+							else 
+								DoCast(i_pl,  SPELL_DOWNWIND_OF_ALTAIRUS);
 	
                 					
             DoMeleeAttackIfReady();
