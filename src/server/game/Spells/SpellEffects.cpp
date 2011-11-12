@@ -400,6 +400,18 @@ void Spell::SpellDamageSchoolDmg(SpellEffIndex effIndex)
                     case 28865:
                         damage = (((InstanceMap*)m_caster->GetMap())->GetDifficulty() == REGULAR_DIFFICULTY ? 2750 : 4250);
                         break;
+                    // Ancient Fury
+                    case 86704:
+                    {
+                        Aura* ancientpower = m_caster->GetAura(86700);
+
+                        if (!ancientpower)
+                            return;
+
+                        damage = (damage * ancientpower->GetStackAmount()) ;
+                        break;
+                    }
+
                     // percent from health with min
                     case 25599:                             // Thundercrash
                     {
@@ -1797,6 +1809,17 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
 
             switch (m_spellInfo->Id)
             {
+                // Guardian of Ancient Kings
+                case 86150:
+                {
+                    if (m_caster->ToPlayer()->HasSpell(20473)) // Holy Shock
+                        m_caster->CastSpell(m_caster,86669,true);
+                    if (m_caster->ToPlayer()->HasSpell(85256)) // Templar's Verdict
+                        m_caster->CastSpell(m_caster,86698,true);
+                    if (m_caster->ToPlayer()->HasSpell(31935)) // Avenger's shield
+                        m_caster->CastSpell(m_caster,86659,true);
+                    return;
+                }
                 case 19740: // Blessing of Might
                 {
                     if (m_caster->GetTypeId() == TYPEID_PLAYER)
