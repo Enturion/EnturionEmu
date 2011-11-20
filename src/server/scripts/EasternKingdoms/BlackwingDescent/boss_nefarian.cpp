@@ -63,7 +63,7 @@ enum Spells
  SPELL_EXPLOSIVE_CINDERS_H        =  79339,
  SPELL_HAIL_OF_BONES_H10          =  94105,
  SPELL_HAIL_OF_BONES_N10          =  78684,
- SPELL_HAIL_OF_BONES_N25          =  94104,               //
+ SPELL_HAIL_OF_BONES_N25          =  94104,
  SPELL_HAIL_OF_BONES_H25          =  94106,
  SPELL_SHADOW_OF_COWARDIGE_ALL    =  79353,
  SPELL_SHADOWBLAZE_SPARK_ALL      =  81031,
@@ -122,17 +122,17 @@ public:
 
         void Reset()
         {
-			Berserk_Timer = 15000;
-			Children_of_Deathwing_Timer = 20000;
-			Dominion_Timer = 25000;
-			Explosive_Cinders_Timer = 17000;
-			Hail_of_Bones_Timer = 15000;
-			Shadow_of_Cowardige_Timer = 30000;
-			Shadowblaze_Spark_Timer = 25000;
-            Shadowflame_Barrage_Timer = 12000;                          //These times are probably wrong
-            Shadowflame_Breath_Timer = 7000;
-            Tail_Lash_Timer = 10000;
-            ClassCall_Timer = 35000;                            //35-40 seconds
+			Berserk_Timer = 25000;                                //25 seconds
+			Children_of_Deathwing_Timer = 20000;                  //20 seconds
+			Dominion_Timer = 25000;                               //25 seconds
+			Explosive_Cinders_Timer = 20000;                      //20 seconds
+			Hail_of_Bones_Timer = 25000;                          //25 seconds
+			Shadow_of_Cowardige_Timer = 30000;                    //30 seconds
+			Shadowblaze_Spark_Timer = 25000;                      //25 seconds
+            Shadowflame_Barrage_Timer = 30000;                    //These times are probably wrong
+            Shadowflame_Breath_Timer = 20000;                    //20 seconds
+            Tail_Lash_Timer = 20000;                             //20 seconds
+            ClassCall_Timer = 35000;                            //35 seconds
             Phase3 = false;
 
             DespawnTimer = 5000000;
@@ -170,77 +170,114 @@ public:
 
             if (!UpdateVictim())
                 return;
+			 if (IsHeroic())
 
-            //Shadowflame_Barrage_Timer
-            if (Shadowflame_Barrage_Timer <= diff)
+		         //Shadowflame_Barrage_Timer 
+if (Shadowflame_Barrage_Timer <= diff)
+  {
+if (IsHeroic())
+  {
+  DoCast(me->getVictim(), SPELL_SHADOWFLAME_BARRAGE_H10);
+                
+  } else 
+  {
+     DoCast(me->getVictim(), SPELL_SHADOWFLAME_BARRAGE_N10);
+  }
+    Shadowflame_Barrage_Timer = 30000;
+  } else Shadowflame_Barrage_Timer -= diff;			
+
+   //Hail_of_Bones_Timer
+if (Hail_of_Bones_Timer <= diff)
             {
-                DoCast(me->getVictim(), SPELL_SHADOWFLAME_BARRAGE_N10);
-                Shadowflame_Barrage_Timer = 12000;
-            } else Shadowflame_Barrage_Timer -= diff;
+if (IsHeroic())
+  {
+    DoCast(me->getVictim(), SPELL_HAIL_OF_BONES_H10);
+                
+  } else 
+  {
+    DoCast(me->getVictim(), SPELL_HAIL_OF_BONES_N10);
+    Hail_of_Bones_Timer = 25000;
+	}
+  } else Hail_of_Bones_Timer -= diff;
 
-            //Hail_of_Bones_Timer
-            if (Hail_of_Bones_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_HAIL_OF_BONES_H10);
-                Hail_of_Bones_Timer = 15000;
-            } else Hail_of_Bones_Timer -= diff;
+    //Berserk_Timer
+if (Berserk_Timer <= diff)
+  {
+   DoCast(me->getVictim(), SPELL_BERSERK_ALL);
+   Berserk_Timer = 25000;
+  } else Berserk_Timer -= diff;
 
-            //Berserk_Timer
-            if (Berserk_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_BERSERK_ALL);
-                Berserk_Timer = 15000;
-            } else Berserk_Timer -= diff;
+    //Shadowflame_Breath_Timer 
+if (Shadowflame_Breath_Timer <= diff)
+  {
+if (IsHeroic())
+  {
+  DoCast(me->getVictim(), SPELL_SHADOWFLAME_BREATH_H10);
+                
+  } else 
+  {
+     DoCast(me->getVictim(), SPELL_SHADOWFLAME_BREATH_N10);
+  }
+    Shadowflame_Breath_Timer = 20000;
+  } else Shadowflame_Breath_Timer -= diff;
 
-            //Shadowflame_Breath_Timer
-            if (Shadowflame_Breath_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_SHADOWFLAME_BREATH_H10);
-                Shadowflame_Breath_Timer = 7000;
-            } else Shadowflame_Breath_Timer -= diff;
+    //Tail_Lash_Timer
+if (Tail_Lash_Timer <= diff)
+  {
+if (IsHeroic())
+  {
+    DoCast(me->getVictim(), SPELL_TAIL_LASH_H10);
+               
+  } else 
+  {
+    DoCast(me->getVictim(), SPELL_TAIL_LASH_N10);
+    Tail_Lash_Timer = 20000;
+	}
+  } else Tail_Lash_Timer -= diff;
 
-            //Tail_Lash_Timer
-            if (Tail_Lash_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_TAIL_LASH_H10);
-                Tail_Lash_Timer = 10000;
-            } else Tail_Lash_Timer -= diff;
+   //Children_of_Deathwing_Timer
+ if (Children_of_Deathwing_Timer <= diff)
+  {
+    DoCast(me->getVictim(), SPELL_CHILDREN_OF_DEATHWING_ALL);
+    Children_of_Deathwing_Timer = 20000;
+  } else Children_of_Deathwing_Timer -= diff;
 
-			//Children_of_Deathwing_Timer
-            if (Children_of_Deathwing_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_CHILDREN_OF_DEATHWING_ALL);
-                Children_of_Deathwing_Timer = 20000;
-            } else Children_of_Deathwing_Timer -= diff;
+   //Dominion_Timer
+if (Dominion_Timer <= diff)
+  {
+if (IsHeroic())
+  {
+    DoCast(me->getVictim(), SPELL_DOMINION_H);
+		}
+     {  
+    Dominion_Timer = 25000;
+	} 
+  } else Dominion_Timer -= diff;
 
-			//Dominion_Timer
-            if (Dominion_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_DOMINION_H);
-                Dominion_Timer = 25000;
-            } else Dominion_Timer -= diff;
+   //Explosive_Cinders_Timer
+if (Explosive_Cinders_Timer <= diff)
+  {
+if (IsHeroic())
+  {
+    DoCast(me->getVictim(), SPELL_EXPLOSIVE_CINDERS_H);
+  }
+    Explosive_Cinders_Timer = 20000;
+  } else Explosive_Cinders_Timer -= diff;
 
-			//Explosive_Cinders_Timer
-            if (Explosive_Cinders_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_EXPLOSIVE_CINDERS_H);
-                Explosive_Cinders_Timer = 17000;
-            } else Explosive_Cinders_Timer -= diff;
+    //Shadow_of_Cowardige_Timer
+if (Shadow_of_Cowardige_Timer <= diff)
+  {
+   DoCast(me->getVictim(), SPELL_SHADOW_OF_COWARDIGE_ALL);
+   Shadow_of_Cowardige_Timer = 30000;
+  } else Shadow_of_Cowardige_Timer -= diff;
 
-			//Shadow_of_Cowardige_Timer
-            if (Explosive_Cinders_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_SHADOW_OF_COWARDIGE_ALL);
-                Shadow_of_Cowardige_Timer = 30000;
-            } else Shadow_of_Cowardige_Timer -= diff;
-
-			//Shadowblaze_Spark_Timer
-            if (Shadowblaze_Spark_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_SHADOWBLAZE_SPARK_ALL);
-                Shadowblaze_Spark_Timer = 25000;
-            } else Shadowblaze_Spark_Timer -= diff;
-
+   //Shadowblaze_Spark_Timer
+if (Shadowblaze_Spark_Timer <= diff)
+  {
+   DoCast(me->getVictim(), SPELL_SHADOWBLAZE_SPARK_ALL);
+   Shadowblaze_Spark_Timer = 25000;
+  } else Shadowblaze_Spark_Timer -= diff;
+                                  
             //ClassCall_Timer
             if (ClassCall_Timer <= diff)
             {
@@ -248,7 +285,7 @@ public:
                 //On official it is based on what classes are currently on the hostil list
                 //but we can't do that yet so just randomly call one
 
-                switch (urand(0, 8))
+				   switch (urand(0, 8))
                 {
                     case 0:
                         DoScriptText(SAY_MAGE, me);
@@ -297,13 +334,12 @@ public:
                 Phase3 = true;
                 DoScriptText(SAY_RAISE_SKELETONS, me);
             }
-
             DoMeleeAttackIfReady();
-        }
-    };
-};
+            }
+          }
+		}
 
 void AddSC_boss_nefarian2()
-{
-    new boss_nefarian2();
-}
+		{
+			new boss_nefarian2();
+		}
