@@ -137,8 +137,8 @@ class boss_altairus : public CreatureScript
 	            else if ( !isCTW ) 
 	                m_uiSpellTimerCTW_stop -= uiDiff;
 
-                if (me->HasUnitState(UNIT_STAT_CASTING))
-                    return;
+                //if (me->HasUnitState(UNIT_STAT_CASTING))
+                //    return;
 
 	            //Spell CB timer
 	            if (m_uiSpellTimerCB <= uiDiff)
