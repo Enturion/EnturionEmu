@@ -3983,8 +3983,9 @@ void Unit::RemoveMovementImpairingAuras()
     RemoveAurasWithMechanic((1<<MECHANIC_SNARE)|(1<<MECHANIC_ROOT));
 }
 
-void Unit::RemoveAurasWithMechanic(uint32 mechanic_mask, AuraRemoveMode removemode, uint32 except)
+void Unit::RemoveAurasWithMechanic(uint32 mechanic_mask, AuraRemoveMode removemode, uint32 except, int32 count)
 {
+    int32 auracount = 0;
     for (AuraApplicationMap::iterator iter = m_appliedAuras.begin(); iter != m_appliedAuras.end();)
     {
         Aura const * aura = iter->second->GetBase();
@@ -3993,6 +3994,9 @@ void Unit::RemoveAurasWithMechanic(uint32 mechanic_mask, AuraRemoveMode removemo
             if (GetAllSpellMechanicMask(aura->GetSpellProto()) & mechanic_mask)
             {
                 RemoveAura(iter, removemode);
+                auracount++;
+                if (count && auracount == count)
+                    break;
                 continue;
             }
         }
@@ -5109,7 +5113,12 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 case 25988:
                 {
                     // return damage % to attacker but < 50% own total health
-                    basepoints0 = int32(std::min(CalculatePctN(damage, triggerAmount), CountPctFromMaxHealth(50)));
+                    basepoints0 = int32((triggerAmount * damage) /100);
+
+                    int32 halfMaxHealth = int32(CountPctFromMaxHealth(50));
+                    if (basepoints0 > halfMaxHealth)
+                        basepoints0 = halfMaxHealth;
+
                     triggered_spell_id = 25997;
 
                     break;
@@ -5430,18 +5439,6 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                     owner->CastSpell(owner, 58227, true, castItem, triggeredByAura);
                     return true;
                 }
-                // Divine purpose
-                case 31871:
-                case 31872:
-                {
-                    // Roll chane
-                    if (!pVictim || !pVictim->isAlive() || !roll_chance_i(triggerAmount))
-                        return false;
-
-                    // Remove any stun effect on target
-                    pVictim->RemoveAurasWithMechanic(1<<MECHANIC_STUN, AURA_REMOVE_BY_ENEMY_SPELL);
-                    return true;
-                }
                 // Glyph of Life Tap
                 case 63320:
                 {
@@ -5744,6 +5741,24 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
             }
             switch(dummySpell->Id)
             {
+                //Nether Vortex
+                case 86181:
+                case 86209:
+                {
+                    AuraMap const &slowAura = GetOwnedAuras();
+                    for (Unit::AuraMap::const_iterator itr = slowAura.begin(); itr != slowAura.end();)
+                        if ((*itr).second->GetId() == 31589) // Found Slow, dont proc
+                            break;
+                        else
+                            itr++;
+
+                    target = this;
+                    triggered_spell_id = 86262;
+
+                    if (pVictim)
+                        CastSpell(pVictim,31589,false);
+                    break;	
+                }
                 // Glyph of Polymorph
                 case 56375:
                 {
@@ -6671,7 +6686,6 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 }
                 return false;
             }
-
             // Righteous Vengeance
             if (dummySpell->SpellIconID == 3025)
             {
@@ -6695,13 +6709,46 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 // Judgements of the Bold
                 case 89901:
                 {
-					if (roll_chance_f(triggerAmount) && !this->IsWithinDistInMap(pVictim, 15.0f))
-					{
-						target = this;
-						triggered_spell_id = 89906;
-						break;
-					}
+                    target = this;
+                    triggered_spell_id = 89906;
+                    break;
                 }
+                // Ancient Healer
+                case 86674:
+                {
+                    int32 bp0 = damage;
+                    int32 bp1 = ((bp0 * 10) / 100);
+
+                    if (!bp0 || !bp1)
+                        return false;
+
+                    if (pVictim && pVictim->IsFriendlyTo(this))  
+                        CastCustomSpell(pVictim,86678,&bp0,&bp1,0,true,NULL,triggeredByAura,0);
+                    else
+                        CastCustomSpell(this,86678,&bp0,&bp1,0,true,NULL,triggeredByAura,0);
+                    return true;
+                }
+                // Ancient Crusader - Player
+                case 86701:
+                {
+                    target = this;
+                    triggered_spell_id = 86700;
+                    break;
+                }
+                // Uncomment this once the guardian is receiving the aura via 
+                // creature template addon and redirect aura procs to the owner
+                // Ancient Crusader - Guardian
+                /*
+                case 86703:
+                {
+                    Unit* owner = this->GetOwner();
+     
+                    if (!owner)
+                        return false;
+     
+                    owner->CastSpell(owner, 86700, true);
+                    return true;
+                }*/
                 // Long Arm of The law
                 case 87168:
                 case 87172:
@@ -6713,7 +6760,17 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                         break;
                     }
                 }
-
+                // Divine purpose
+                case 85117:
+                case 86172:
+                {
+                    if (roll_chance_f(triggerAmount))
+                    {
+                        target = this;
+                        triggered_spell_id = 90174;
+                        break;
+                    }
+                }
                 // Judgement of Light
                 case 20185:
                 {
@@ -14330,7 +14387,7 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
             continue;
 
         // Triggered spells not triggering additional spells
-        bool triggered= !(spellProto->AttributesEx3 & SPELL_ATTR3_CAN_PROC_TRIGGERED) ?
+        bool triggered= !(spellProto->AttributesEx3 & SPELL_ATTR3_CAN_PROC_WITH_TRIGGERED) ?
             (procExtra & PROC_EX_INTERNAL_TRIGGERED && !(procFlag & PROC_FLAG_DONE_TRAP_ACTIVATION)) : false;
 
         for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
@@ -15149,7 +15206,7 @@ bool Unit::IsTriggeredAtSpellProcEvent(Unit *pVictim, Aura * aura, SpellEntry co
     // Additional checks for triggered spells (ignore trap casts)
     if (procExtra & PROC_EX_INTERNAL_TRIGGERED && !(procFlag & PROC_FLAG_DONE_TRAP_ACTIVATION))
     {
-        if (!(spellProto->AttributesEx3 & SPELL_ATTR3_CAN_PROC_TRIGGERED))
+        if (!(spellProto->AttributesEx3 & SPELL_ATTR3_CAN_PROC_WITH_TRIGGERED))
             return false;
     }
 
