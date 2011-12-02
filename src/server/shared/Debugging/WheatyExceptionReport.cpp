@@ -1,22 +1,3 @@
-/*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
 //==========================================
 // Matt Pietrek
 // MSDN Magazine, 2002
@@ -418,7 +399,7 @@ void WheatyExceptionReport::printTracesForAllThreads()
         }
         CloseHandle(threadHandle);
     }
-  } while(Thread32Next(hThreadSnap, &te32));
+  } while (Thread32Next(hThreadSnap, &te32));
 
 //  Don't forget to clean up the snapshot object.
   CloseHandle(hThreadSnap);
@@ -435,7 +416,7 @@ PEXCEPTION_POINTERS pExceptionInfo)
     GetLocalTime(&systime);
 
     // Start out with a banner
-    _tprintf(_T("Revision: %s\r\n"), _FULLVERSION);
+    _tprintf(_T("Revision: %s\r\n"), _CLIENT_BUILD_REVISION, _FULLVERSION);
     _tprintf(_T("Date %u:%u:%u. Time %u:%u \r\n"), systime.wDay, systime.wMonth, systime.wYear, systime.wHour, systime.wMinute);
     PEXCEPTION_RECORD pExceptionRecord = pExceptionInfo->ExceptionRecord;
 
@@ -770,7 +751,7 @@ bool bWriteVariables, HANDLE pThreadHandle)                                     
 BOOL CALLBACK
 WheatyExceptionReport::EnumerateSymbolsCallback(
 PSYMBOL_INFO  pSymInfo,
-ULONG         SymbolSize,
+ULONG         /*SymbolSize*/,
 PVOID         UserContext)
 {
     char szBuffer[2048];
@@ -798,7 +779,7 @@ bool WheatyExceptionReport::FormatSymbolValue(
 PSYMBOL_INFO pSym,
 STACKFRAME * sf,
 char * pszBuffer,
-unsigned cbBuffer)
+unsigned /*cbBuffer*/)
 {
     char * pszCurrBuffer = pszBuffer;
 
@@ -869,7 +850,7 @@ DWORD dwTypeIndex,
 unsigned nestingLevel,
 DWORD_PTR offset,
 bool & bHandled,
-char* Name)
+char* /*Name*/)
 {
     bHandled = false;
 

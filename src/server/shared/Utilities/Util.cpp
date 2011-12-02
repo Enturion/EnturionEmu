@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -182,7 +181,7 @@ uint32 TimeStringToSecs(const std::string& timestring)
     uint32 buffer     = 0;
     uint32 multiplier = 0;
 
-    for (std::string::const_iterator itr = timestring.begin(); itr != timestring.end(); itr++ )
+    for (std::string::const_iterator itr = timestring.begin(); itr != timestring.end(); ++itr)
     {
         if (isdigit(*itr))
         {
@@ -191,7 +190,7 @@ uint32 TimeStringToSecs(const std::string& timestring)
         }
         else
         {
-            switch(*itr)
+            switch (*itr)
             {
                 case 'd': multiplier = DAY;     break;
                 case 'h': multiplier = HOUR;    break;
@@ -236,7 +235,7 @@ bool IsIPAddress(char const* ipaddress)
 /// create PID file
 uint32 CreatePIDFile(const std::string& filename)
 {
-    FILE * pid_file = fopen (filename.c_str(), "w" );
+    FILE* pid_file = fopen (filename.c_str(), "w" );
     if (pid_file == NULL)
         return 0;
 
@@ -318,11 +317,11 @@ bool Utf8toWStr(const std::string& utf8str, std::wstring& wstr)
 {
     try
     {
-        size_t len = utf8::distance(utf8str.c_str(), utf8str.c_str()+utf8str.size());
-        wstr.resize(len);
-
-        if (len)
+        if (size_t len = utf8::distance(utf8str.c_str(), utf8str.c_str()+utf8str.size()))
+        {
+            wstr.resize(len);
             utf8::utf8to16(utf8str.c_str(), utf8str.c_str()+utf8str.size(), &wstr[0]);
+        }
     }
     catch(std::exception)
     {
@@ -415,7 +414,7 @@ std::wstring GetMainPartOfName(std::wstring wname, uint32 declension)
         { &ie_End[1], &i_End[1],    NULL,         NULL,        NULL,         NULL,         NULL,       NULL }
     };
 
-    for (wchar_t const * const* itr = &dropEnds[declension][0]; *itr; ++itr)
+    for (wchar_t const* const* itr = &dropEnds[declension][0]; *itr; ++itr)
     {
         size_t len = size_t((*itr)[-1]);                    // get length from string size field
 
@@ -474,7 +473,7 @@ bool Utf8FitTo(const std::string& str, std::wstring search)
     return true;
 }
 
-void utf8printf(FILE *out, const char *str, ...)
+void utf8printf(FILE* out, const char *str, ...)
 {
     va_list ap;
     va_start(ap, str);
@@ -482,7 +481,7 @@ void utf8printf(FILE *out, const char *str, ...)
     va_end(ap);
 }
 
-void vutf8printf(FILE *out, const char *str, va_list* ap)
+void vutf8printf(FILE* out, const char *str, va_list* ap)
 {
 #if PLATFORM == PLATFORM_WINDOWS
     char temp_buf[32*1024];

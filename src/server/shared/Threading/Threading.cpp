@@ -1,7 +1,6 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2008 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -44,7 +43,7 @@ ThreadPriority::ThreadPriority()
         pr_iter.next();
     }
 
-    ASSERT (!_tmp.empty());
+    ASSERT(!_tmp.empty());
 
     if (_tmp.size() >= MAXPRIORITYNUM)
     {
@@ -109,7 +108,7 @@ Thread::Thread(Runnable* instance): m_iThreadId(0), m_hThreadHandle(0), m_task(i
         m_task->incReference();
 
     bool _start = start();
-    ASSERT (_start);
+    ASSERT(_start);
 }
 
 Thread::~Thread()
@@ -179,7 +178,7 @@ void Thread::resume()
 
 ACE_THR_FUNC_RETURN Thread::ThreadTask(void * param)
 {
-    Runnable * _task = (Runnable*)param;
+    Runnable* _task = (Runnable*)param;
     _task->run();
 
     // task execution complete, free referecne added at
@@ -223,7 +222,7 @@ void Thread::setPriority(Priority type)
     int _priority = m_TpEnum.getPriority(type);
     int _ok = ACE_Thread::setprio(m_hThreadHandle, _priority);
     //remove this ASSERT in case you don't want to know is thread priority change was successful or not
-    ASSERT (_ok == 0);
+    ASSERT(_ok == 0);
 }
 
 void Thread::Sleep(unsigned long msecs)

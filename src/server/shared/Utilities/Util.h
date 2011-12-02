@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -171,9 +170,14 @@ inline T RoundToInterval(T& num, T floor, T ceil)
     return num = std::min(std::max(num, floor), ceil);
 }
 
+inline float roundf(float value)
+{
+    return floor(value + 0.5f);
+}
+
 // UTF8 handling
 bool Utf8toWStr(const std::string& utf8str, std::wstring& wstr);
-// in wsize==max size of buffer, out wsize==real string size
+// in wsize == max size of buffer, out wsize == real string size
 bool Utf8toWStr(char const* utf8str, size_t csize, wchar_t* wstr, size_t& wsize);
 inline bool Utf8toWStr(const std::string& utf8str, wchar_t* wstr, size_t& wsize)
 {
@@ -181,7 +185,7 @@ inline bool Utf8toWStr(const std::string& utf8str, wchar_t* wstr, size_t& wsize)
 }
 
 bool WStrToUtf8(std::wstring wstr, std::string& utf8str);
-// size==real string size
+// size == real string size
 bool WStrToUtf8(wchar_t* wstr, size_t size, std::string& utf8str);
 
 size_t utf8length(std::string& utf8str);                    // set string to "" if invalid utf8 sequence
@@ -369,8 +373,8 @@ std::wstring GetMainPartOfName(std::wstring wname, uint32 declension);
 bool utf8ToConsole(const std::string& utf8str, std::string& conStr);
 bool consoleToUtf8(const std::string& conStr, std::string& utf8str);
 bool Utf8FitTo(const std::string& str, std::wstring search);
-void utf8printf(FILE *out, const char *str, ...);
-void vutf8printf(FILE *out, const char *str, va_list* ap);
+void utf8printf(FILE* out, const char *str, ...);
+void vutf8printf(FILE* out, const char *str, va_list* ap);
 
 bool IsIPAddress(char const* ipaddress);
 uint32 CreatePIDFile(const std::string& filename);
@@ -538,14 +542,14 @@ public:
     template<class type>
     inline flag96 operator & (type & right)
     {
-        flag96 ret(part[0] & right.part[0],part[1] & right.part[1],part[2] & right.part[2]);
+        flag96 ret(part[0] & right.part[0], part[1] & right.part[1], part[2] & right.part[2]);
         return
             ret;
     };
     template<class type>
     inline flag96 operator & (type & right) const
     {
-        flag96 ret(part[0] & right.part[0],part[1] & right.part[1],part[2] & right.part[2]);
+        flag96 ret(part[0] & right.part[0], part[1] & right.part[1], part[2] & right.part[2]);
         return
             ret;
     };
@@ -559,7 +563,7 @@ public:
     template<class type>
     inline flag96 operator | (type & right)
     {
-        flag96 ret(part[0] | right.part[0],part[1] | right.part[1],part[2] | right.part[2]);
+        flag96 ret(part[0] | right.part[0], part[1] | right.part[1], part[2] | right.part[2]);
         return
             ret;
     };
@@ -567,7 +571,7 @@ public:
     template<class type>
     inline flag96 operator | (type & right) const
     {
-        flag96 ret(part[0] | right.part[0],part[1] | right.part[1],part[2] | right.part[2]);
+        flag96 ret(part[0] | right.part[0], part[1] | right.part[1], part[2] | right.part[2]);
         return
             ret;
     };
@@ -588,7 +592,7 @@ public:
     template<class type>
     inline flag96 operator ^ (type & right)
     {
-        flag96 ret(part[0] ^ right.part[0],part[1] ^ right.part[1],part[2] ^ right.part[2]);
+        flag96 ret(part[0] ^ right.part[0], part[1] ^ right.part[1], part[2] ^ right.part[2]);
         return
             ret;
     };
@@ -596,7 +600,7 @@ public:
     template<class type>
     inline flag96 operator ^ (type & right) const
     {
-        flag96 ret(part[0] ^ right.part[0],part[1] ^ right.part[1],part[2] ^ right.part[2]);
+        flag96 ret(part[0] ^ right.part[0], part[1] ^ right.part[1], part[2] ^ right.part[2]);
         return
             ret;
     };
@@ -644,9 +648,18 @@ public:
         return (part[el]);
     };
 
-    inline const uint32 & operator[](uint8 el) const
+    inline uint32 operator[](uint8 el) const
     {
         return (part[el]);
     };
 };
+
+/* Select a random element from a container. Note: make sure you explicitly empty check the container */
+template <class C> typename C::value_type const& SelectRandomContainerElement(C const& container)
+{
+    typename C::const_iterator it = container.begin();
+    std::advance(it, urand(0, container.size() - 1));
+    return *it;
+}
+
 #endif
