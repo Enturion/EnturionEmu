@@ -1,7 +1,5 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -57,7 +55,7 @@ m_connectionFlags(CONNECTION_ASYNC)
 
 MySQLConnection::~MySQLConnection()
 {
-    ASSERT (m_Mysql); /// MySQL context must be present at this point
+    ASSERT(m_Mysql); /// MySQL context must be present at this point
 
     sLog->outSQLDriver("MySQLConnection::~MySQLConnection()");
     for (size_t i = 0; i < m_stmts.size(); ++i)
@@ -417,6 +415,11 @@ bool MySQLConnection::ExecuteTransaction(SQLTransaction& transaction)
             break;
         }
     }
+
+    // we might encounter errors during certain queries, and depending on the kind of error
+    // we might want to restart the transaction. So to prevent data loss, we only clean up when it's all done.
+    // This is done in calling functions DatabaseWorkerPool<T>::DirectCommitTransaction and TransactionTask::Execute,
+    // and not while iterating over every element.
 
     CommitTransaction();
     return true;

@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -32,7 +31,7 @@
 
 #define _LIKE_           "LIKE"
 #define _TABLE_SIM_      "`"
-#define _CONCAT3_(A, B, C) "CONCAT( " A " , " B " , " C " )"
+#define _CONCAT3_(A, B, C) "CONCAT( " A ", " B ", " C " )"
 #define _OFFSET_         "LIMIT %d, 1"
 
 #include "Implementation/LoginDatabase.h"

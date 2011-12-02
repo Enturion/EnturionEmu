@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -41,7 +40,7 @@ class ResultSet
         uint64 GetRowCount() const { return m_rowCount; }
         uint32 GetFieldCount() const { return m_fieldCount; }
 
-        Field *Fetch() const { return m_currentRow; }
+        Field* Fetch() const { return m_currentRow; }
         const Field & operator [] (uint32 index) const
         {
             ASSERT(index < m_fieldCount);
@@ -49,7 +48,7 @@ class ResultSet
         }
 
     protected:
-        Field *m_currentRow;
+        Field* m_currentRow;
         uint64 m_rowCount;
         uint32 m_fieldCount;
 
@@ -59,7 +58,7 @@ class ResultSet
         MYSQL_FIELD *m_fields;
 };
 
-typedef ACE_Refcounted_Auto_Ptr<ResultSet, ACE_Thread_Mutex> QueryResult;
+typedef ACE_Refcounted_Auto_Ptr<ResultSet, ACE_Null_Mutex> QueryResult;
 
 class PreparedResultSet
 {
@@ -103,6 +102,6 @@ class PreparedResultSet
         bool _NextRow();
 };
 
-typedef ACE_Refcounted_Auto_Ptr<PreparedResultSet, ACE_Thread_Mutex> PreparedQueryResult;
+typedef ACE_Refcounted_Auto_Ptr<PreparedResultSet, ACE_Null_Mutex> PreparedQueryResult;
 
 #endif

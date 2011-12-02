@@ -1,7 +1,5 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -65,7 +63,6 @@ class DatabaseWorkerPool
 
         ~DatabaseWorkerPool()
         {
-            sLog->outSQLDriver("~DatabaseWorkerPool for '%s'.", m_connectionInfo.database.c_str());
         }
 
         bool Open(const std::string& infoString, uint8 async_threads, uint8 synch_threads)
@@ -448,10 +445,7 @@ class DatabaseWorkerPool
             if (!to || !from || !length)
                 return 0;
 
-            T* t = GetFreeConnection();
-            unsigned long ret = mysql_real_escape_string(t->GetHandle(), to, from, length);
-            t->Unlock();
-            return ret;
+            return mysql_real_escape_string(m_connections[IDX_SYNCH][0]->GetHandle(), to, from, length);
         }
 
         void Enqueue(SQLOperation* op)
