@@ -51,7 +51,6 @@ enum DebugLogFilters
     LOG_FILTER_LOOT                     = 0x00100000,   // Loot related
     LOG_FILTER_GUILD                    = 0x00200000,   // Guild related
     LOG_FILTER_TRANSPORTS               = 0x00400000,   // Transport related
-    LOG_FILTER_BATTLEFIELD              = 0x00800000,   // Battlefield related
 };
 
 enum LogTypes
@@ -104,21 +103,16 @@ const int Colors = int(WHITE)+1;
 class Log
 {
     friend class ACE_Singleton<Log, ACE_Thread_Mutex>;
-
-    private:
-        Log();
-        ~Log();
+    Log();
+    ~Log();
 
     public:
         void Initialize();
-
-        void ReloadConfig();
 
         void InitColors(const std::string& init_str);
         void SetColor(bool stdout_stream, ColorTypes color);
         void ResetColor(bool stdout_stream);
 
-        void outErrorST( const char * err, ... )                ATTR_PRINTF(2, 3);
         void outDB( LogTypes type, const char * str );
         void outString( const char * str, ... )                 ATTR_PRINTF(2, 3);
         void outString( );
