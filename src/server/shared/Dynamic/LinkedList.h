@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -117,7 +116,7 @@ class LinkedListHead
             {
                 uint32 result = 0;
                 LinkedListElement const* e = getFirst();
-                while(e)
+                while (e)
                 {
                     ++result;
                     e = e->next();
