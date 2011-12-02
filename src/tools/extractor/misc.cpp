@@ -1,12 +1,14 @@
 /*
- * Copyright (C) 2010-2011 CactusEMU <http://www.cactusemu.com/>
+ * Copyright (C) 2005-2011 MaNGOS <http://www.getmangos.com/>
+ * Copyright (C) 2008-2011 Trinity <http://www.trinitycore.org/>
+ * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -22,7 +24,7 @@
 
 bool FileExists( const char* FileName )
 {
-    FILE *fp = fopen(FileName,"r");
+    FILE *fp = fopen(FileName, "r");
     if ( fp )
     {
         fclose(fp);
@@ -55,7 +57,7 @@ int ReadBuild(int locale)
     std::ifstream fichier((std::string("./dbc/") + filename).c_str(), std::ios::in);
     if (!fichier)
         assert(false && "Error when loading component.wow-...");
-    while(fichier)
+    while (fichier)
     {
         fichier >> temp;
         text += temp;
@@ -63,14 +65,14 @@ int ReadBuild(int locale)
 
     size_t pos = text.find("version=\"");
     size_t pos1 = pos + strlen("version=\"");
-    size_t pos2 = text.find("\"",pos1);
+    size_t pos2 = text.find("\"", pos1);
     if (pos == text.npos || pos2 == text.npos || pos1 >= pos2)
     {
         printf("Fatal error: Invalid  %s file format!\n", filename.c_str());
         exit(1);
     }
 
-    std::string build_str = text.substr(pos1,pos2-pos1);
+    std::string build_str = text.substr(pos1, pos2-pos1);
 
     int build = atoi(build_str.c_str());
     if (build <= 0)

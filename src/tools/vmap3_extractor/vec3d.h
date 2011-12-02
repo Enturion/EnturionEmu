@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2005-2011 MaNGOS <http://www.getmangos.com/>
+ * Copyright (C) 2008-2011 Trinity <http://www.trinitycore.org/>
+ * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
+
 #ifndef VEC3D_H
 #define VEC3D_H
 
@@ -7,7 +27,7 @@
 class Vec3D
 {
 public:
-    float x,y,z;
+    float x, y, z;
 
     Vec3D(float x0 = 0.0f, float y0 = 0.0f, float z0 = 0.0f) : x(x0), y(y0), z(z0) {}
 
@@ -22,13 +42,13 @@ public:
 
     Vec3D operator+ (const Vec3D &v) const
     {
-        Vec3D r(x+v.x,y+v.y,z+v.z);
+        Vec3D r(x+v.x, y+v.y, z+v.z);
         return r;
     }
 
     Vec3D operator- (const Vec3D &v) const
     {
-        Vec3D r(x-v.x,y-v.y,z-v.z);
+        Vec3D r(x-v.x, y-v.y, z-v.z);
         return r;
     }
 
@@ -39,7 +59,7 @@ public:
 
     Vec3D operator* (float d) const
     {
-        Vec3D r(x*d,y*d,z*d);
+        Vec3D r(x*d, y*d, z*d);
         return r;
     }
 
@@ -122,7 +142,7 @@ public:
 class Vec2D
 {
 public:
-    float x,y;
+    float x, y;
 
     Vec2D(float x0 = 0.0f, float y0 = 0.0f) : x(x0), y(y0) {}
 
@@ -136,13 +156,13 @@ public:
 
     Vec2D operator+ (const Vec2D &v) const
     {
-        Vec2D r(x+v.x,y+v.y);
+        Vec2D r(x+v.x, y+v.y);
         return r;
     }
 
     Vec2D operator- (const Vec2D &v) const
     {
-        Vec2D r(x-v.x,y-v.y);
+        Vec2D r(x-v.x, y-v.y);
         return r;
     }
 
@@ -153,7 +173,7 @@ public:
 
     Vec2D operator* (float d) const
     {
-        Vec2D r(x*d,y*d);
+        Vec2D r(x*d, y*d);
         return r;
     }
 
