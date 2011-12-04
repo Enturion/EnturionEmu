@@ -158,7 +158,7 @@ class SmartScript
         {
             GameObject* pGameObject = NULL;
 
-            CellPair p(Trinity::ComputeCellPair(pSearchObject->GetPositionX(), pSearchObject->GetPositionY()));
+            CellCoord p(Trinity::ComputeCellCoord(pSearchObject->GetPositionX(), pSearchObject->GetPositionY()));
             Cell cell(p);
             cell.data.Part.reserved = ALL_DISTRICT;
 
@@ -166,7 +166,7 @@ class SmartScript
             Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck> checker(pSearchObject, pGameObject, goCheck);
 
             TypeContainerVisitor<Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck>, GridTypeMapContainer > objectChecker(checker);
-            cell.Visit(p, objectChecker, *pSearchObject->GetMap());
+			cell.Visit(p, objectChecker, *(pSearchObject->GetMap()), *pSearchObject, pSearchObject->GetGridActivationRange());
 
             return pGameObject;
         }
@@ -174,7 +174,7 @@ class SmartScript
         Creature* FindCreatureNear(WorldObject* pSearchObject, uint32 guid) const
         {
             Creature* crea = NULL;
-            CellPair p(Trinity::ComputeCellPair(pSearchObject->GetPositionX(), pSearchObject->GetPositionY()));
+            CellCoord p(Trinity::ComputeCellCoord(pSearchObject->GetPositionX(), pSearchObject->GetPositionY()));
             Cell cell(p);
             cell.data.Part.reserved = ALL_DISTRICT;
 
@@ -182,7 +182,7 @@ class SmartScript
             Trinity::CreatureSearcher<Trinity::CreatureWithDbGUIDCheck> checker(pSearchObject, crea, target_check);
 
             TypeContainerVisitor<Trinity::CreatureSearcher <Trinity::CreatureWithDbGUIDCheck>, GridTypeMapContainer > unit_checker(checker);
-            cell.Visit(p, unit_checker, *pSearchObject->GetMap());
+			cell.Visit(p, unit_checker, *(pSearchObject->GetMap()), *pSearchObject, pSearchObject->GetGridActivationRange());
 
             return crea;
         }

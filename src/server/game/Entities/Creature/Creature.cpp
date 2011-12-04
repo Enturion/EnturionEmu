@@ -679,7 +679,7 @@ void Creature::DoFleeToGetAssistance()
     {
         Creature* pCreature = NULL;
 
-        CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
+        CellCoord p(Trinity::ComputeCellCoord(GetPositionX(), GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
@@ -1771,7 +1771,7 @@ SpellEntry const *Creature::reachWithSpellCure(Unit *pVictim)
 // select nearest hostile unit within the given distance (regardless of threat list).
 Unit* Creature::SelectNearestTarget(float dist) const
 {
-    CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
+    CellCoord p(Trinity::ComputeCellCoord(GetPositionX(), GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -1798,7 +1798,7 @@ Unit* Creature::SelectNearestTarget(float dist) const
 // select nearest hostile unit within the given attack distance (i.e. distance is ignored if > than ATTACK_DISTANCE), regardless of threat list.
 Unit* Creature::SelectNearestTargetInAttackDistance(float dist) const
 {
-    CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
+    CellCoord p(Trinity::ComputeCellCoord(GetPositionX(), GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -1847,7 +1847,7 @@ void Creature::CallAssistance()
             std::list<Creature*> assistList;
 
             {
-                CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
+                CellCoord p(Trinity::ComputeCellCoord(GetPositionX(), GetPositionY()));
                 Cell cell(p);
                 cell.data.Part.reserved = ALL_DISTRICT;
                 cell.SetNoCreate();
@@ -1880,7 +1880,7 @@ void Creature::CallForHelp(float fRadius)
     if (fRadius <= 0.0f || !getVictim() || isPet() || isCharmed())
         return;
 
-    CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
+    CellCoord p(Trinity::ComputeCellCoord(GetPositionX(), GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();

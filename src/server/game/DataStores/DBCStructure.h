@@ -55,16 +55,16 @@ struct AchievementEntry
     //uint32 OrderInCategory;                               // 8
     uint32    flags;                                        // 9
     //uint32    icon;                                       // 10 icon (from SpellIcon.dbc)
-    //DBCString titleReward;                                // 11
+    //DBCString reward;                                     // 11
     uint32 count;                                           // 12 - need this count of completed criterias (own or referenced achievement criterias)
-    uint32 refAchievement;                                  // 13 - referenced achievement (counting of all completed criterias)};
+    uint32 refAchievement;                                  // 13 - referenced achievement (counting of all completed criterias)
 };
 
 struct AchievementCategoryEntry
 {
     uint32    ID;                                           // 0
     uint32    parentCategory;                               // 1 -1 for main category
-    //DBCString name;                                       // 2
+    //DBCString name;                                           // 2
     //uint32    sortOrder;                                  // 3
 };
 
@@ -614,12 +614,12 @@ struct BarberShopStyleEntry
 {
     uint32  Id;                                             // 0
     uint32  type;                                           // 1 value 0 -> hair, value 2 -> facialhair
-    //DBCString   name;                                     // 2 name of hair style
-    //uint32  unk_name;                                     // 3, all empty
-    //float   CostMultiplier;                               // 4 values 1 and 0.75
-    uint32  race;                                           // 5 race
-    uint32  gender;                                         // 6 0 -> male, 1 -> female
-    uint32  hair_id;                                        // 7 real ID to hair/facial hair
+    //DBCString  name;                                  // 2        m_DisplayName_lang
+    //uint32  unk_name;                                     // 3        m_Description_lang
+    //float   CostMultiplier;                               // 4        m_Cost_Modifier
+    uint32  race;                                           // 5        m_race
+    uint32  gender;                                         // 6        m_sex
+    uint32  hair_id;                                        // 7        m_data (real ID to hair/facial hair)
 };
 
 struct BattlemasterListEntry
@@ -1243,6 +1243,28 @@ struct LFGDungeonEntry
     // Helpers
     uint32 Entry() const { return ID + (type << 24); }
 };
+
+/*
+struct LiquidTypeEntry
+{
+    uint32      ID;                                         // 0
+    char*       name;                                       // 1
+    uint32      flags;                                      // 2        Water: 1|2|4|8, Magma: 8|16|32|64, Slime: 2|64|256, WMO Ocean: 1|2|4|8|512
+    uint32      type;                                       // 3        0: Water, 1: Ocean, 2: Magma, 3: Slime
+    uint32      soundid;                                    // 4        Reference to SoundEntries.dbc
+    uint32      spellID;                                    // 5        Reference to Spell.dbc
+    float       unk0[4];                                    // 6-9
+    uint32      unk1;                                       // 10       Light?
+    float       particleScale                               // 11       0: Slime, 1: Water/Ocean, 4: Magma
+    uint32      particleMovement;                           // 12
+    uint32      unk2                                        // 13
+    uint32      LiquidMaterialID                            // 14       Reference to LiquidMaterial.dbc
+    char*       texture[6];                                 // 15-20
+    uint32      unk3[2]                                     // 21-22
+    float       unk4[18];                                   // 23-40
+    uint32      unk5[4]                                     // 41-44
+};
+*/
 
 #define MAX_LOCK_CASE 8
 

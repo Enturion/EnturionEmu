@@ -2740,7 +2740,7 @@ public:
 
             // Remove other ring spawned by the player
             {
-            CellPair pair(Trinity::ComputeCellPair(owner->GetPositionX(), owner->GetPositionY()));
+            CellCoord pair(Trinity::ComputeCellCoord(owner->GetPositionX(), owner->GetPositionY()));
             Cell cell(pair);
             cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
@@ -2750,7 +2750,7 @@ public:
             Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInGrid> searcher(owner, templist, check);
 
             TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInGrid>, GridTypeMapContainer> visitor(searcher);
-            cell.Visit(pair, visitor, *(owner->GetMap()));
+			cell.Visit(pair, visitor, *(owner->GetMap()), *owner, owner->GetGridActivationRange());
 
             if (!templist.empty())
                 for (std::list<Creature*>::const_iterator itr = templist.begin(); itr != templist.end(); ++itr)

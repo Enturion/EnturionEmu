@@ -1905,7 +1905,7 @@ GameObject* ChatHandler::GetObjectGlobalyWithGuidOrNearWithDbGuid(uint32 lowguid
     if (!obj && sObjectMgr->GetGOData(lowguid))                   // guid is DB guid of object
     {
         // search near player then
-        CellPair p(Trinity::ComputeCellPair(pl->GetPositionX(), pl->GetPositionY()));
+        CellCoord p(Trinity::ComputeCellCoord(pl->GetPositionX(), pl->GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
 
@@ -1913,7 +1913,7 @@ GameObject* ChatHandler::GetObjectGlobalyWithGuidOrNearWithDbGuid(uint32 lowguid
         Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck> checker(pl, obj, go_check);
 
         TypeContainerVisitor<Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck>, GridTypeMapContainer > object_checker(checker);
-        cell.Visit(p, object_checker, *pl->GetMap());
+		cell.Visit(p, object_checker, *(pl->GetMap()), *pl, pl->GetGridActivationRange());
     }
 
     return obj;

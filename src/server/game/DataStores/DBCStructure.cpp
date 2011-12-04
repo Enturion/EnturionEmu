@@ -203,7 +203,7 @@ int32 SpellEntry::CalculateSimpleValue(uint32 eff) const
 uint32 const* SpellEntry::GetEffectSpellClassMask(uint32 eff) const
 {
     if (SpellEffectEntry const* effectEntry = GetSpellEffectEntry(Id, eff))
-        return &effectEntry->EffectSpellClassMask[0];
+        return effectEntry->EffectSpellClassMask[0];
     return NULL;
 }
 

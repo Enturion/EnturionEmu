@@ -546,6 +546,9 @@ template<class T>
 class GridObject
 {
     public:
+        bool IsInGrid() const { return m_gridRef.isValid(); }
+        void AddToGrid(GridRefManager<T>& m) { ASSERT(!IsInGrid()); m_gridRef.link(&m, (T*)this); }
+        void RemoveFromGrid() { ASSERT(IsInGrid()); m_gridRef.unlink(); }
         GridReference<T> &GetGridRef() { return m_gridRef; }
     protected:
         GridReference<T> m_gridRef;

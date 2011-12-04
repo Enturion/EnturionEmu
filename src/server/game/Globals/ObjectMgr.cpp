@@ -1593,7 +1593,7 @@ void ObjectMgr::AddCreatureToGrid(uint32 guid, CreatureData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellCoord cell_pair = Trinity::ComputeCellCoord(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];
@@ -1609,7 +1609,7 @@ void ObjectMgr::RemoveCreatureFromGrid(uint32 guid, CreatureData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellCoord cell_pair = Trinity::ComputeCellCoord(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];
@@ -1918,7 +1918,7 @@ void ObjectMgr::AddGameobjectToGrid(uint32 guid, GameObjectData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellCoord cell_pair = Trinity::ComputeCellCoord(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];
@@ -1934,7 +1934,7 @@ void ObjectMgr::RemoveGameobjectFromGrid(uint32 guid, GameObjectData const* data
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellCoord cell_pair = Trinity::ComputeCellCoord(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];

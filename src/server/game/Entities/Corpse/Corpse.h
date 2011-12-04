@@ -71,8 +71,8 @@ class Corpse : public WorldObject, public GridObject<Corpse>
         void ResetGhostTime() { m_time = time(NULL); }
         CorpseType GetType() const { return m_type; }
 
-        GridPair const& GetGrid() const { return m_grid; }
-        void SetGrid(GridPair const& grid) { m_grid = grid; }
+        GridCoord const& GetGrid() const { return m_grid; }
+        void SetGrid(GridCoord const& grid) { m_grid = grid; }
 
         Loot loot;                                          // remove insignia ONLY at BG
         Player* lootRecipient;
@@ -89,6 +89,6 @@ class Corpse : public WorldObject, public GridObject<Corpse>
     private:
         CorpseType m_type;
         time_t m_time;
-        GridPair m_grid;                                    // gride for corpse position for fast search
+        GridCoord m_grid;                                    // gride for corpse position for fast search
 };
 #endif

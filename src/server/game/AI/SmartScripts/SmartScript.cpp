@@ -2840,7 +2840,7 @@ uint32 SmartScript::DoChat(int8 id, uint64 whisperGuid)
 Unit* SmartScript::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
 {
     if (!me) return NULL;
-    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellCoord p(Trinity::ComputeCellCoord(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -2859,7 +2859,7 @@ Unit* SmartScript::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
 void SmartScript::DoFindFriendlyCC(std::list<Creature*>& _list, float range)
 {
     if (!me) return;
-    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellCoord p(Trinity::ComputeCellCoord(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -2869,13 +2869,13 @@ void SmartScript::DoFindFriendlyCC(std::list<Creature*>& _list, float range)
 
     TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
-    cell.Visit(p, grid_creature_searcher, *me->GetMap());
+	cell.Visit(p, grid_creature_searcher, *(me->GetMap()), *me, me->GetGridActivationRange());
 }
 
 void SmartScript::DoFindFriendlyMissingBuff(std::list<Creature*>& _list, float range, uint32 spellid)
 {
     if (!me) return;
-    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellCoord p(Trinity::ComputeCellCoord(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -2885,7 +2885,7 @@ void SmartScript::DoFindFriendlyMissingBuff(std::list<Creature*>& _list, float r
 
     TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
-    cell.Visit(p, grid_creature_searcher, *me->GetMap());
+	cell.Visit(p, grid_creature_searcher, *(me->GetMap()), *me, me->GetGridActivationRange());
 }
 
 void SmartScript::SetScript9(SmartScriptHolder& e, uint32 entry)

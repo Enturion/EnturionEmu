@@ -1175,7 +1175,7 @@ inline Unit* CreatureEventAI::GetTargetByType(uint32 Target, Unit* pActionInvoke
 
 Unit* CreatureEventAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
 {
-    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellCoord p(Trinity::ComputeCellCoord(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -1197,7 +1197,7 @@ Unit* CreatureEventAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
 
 void CreatureEventAI::DoFindFriendlyCC(std::list<Creature*>& _list, float range)
 {
-    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellCoord p(Trinity::ComputeCellCoord(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -1207,12 +1207,12 @@ void CreatureEventAI::DoFindFriendlyCC(std::list<Creature*>& _list, float range)
 
     TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
-    cell.Visit(p, grid_creature_searcher, *me->GetMap());
+	cell.Visit(p, grid_creature_searcher, *(me->GetMap()), *me, me->GetGridActivationRange());
 }
 
 void CreatureEventAI::DoFindFriendlyMissingBuff(std::list<Creature*>& _list, float range, uint32 spellid)
 {
-    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellCoord p(Trinity::ComputeCellCoord(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -1222,7 +1222,7 @@ void CreatureEventAI::DoFindFriendlyMissingBuff(std::list<Creature*>& _list, flo
 
     TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
-    cell.Visit(p, grid_creature_searcher, *me->GetMap());
+	cell.Visit(p, grid_creature_searcher, *(me->GetMap()), *me, me->GetGridActivationRange());
 }
 
 // *********************************

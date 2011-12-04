@@ -271,7 +271,7 @@ inline GameObject* Map::_FindGameObject(WorldObject* pSearchObject, uint32 guid)
 {
     GameObject *pGameObject = NULL;
 
-    CellPair p(Trinity::ComputeCellPair(pSearchObject->GetPositionX(), pSearchObject->GetPositionY()));
+    CellCoord p(Trinity::ComputeCellCoord(pSearchObject->GetPositionX(), pSearchObject->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
 
@@ -279,7 +279,7 @@ inline GameObject* Map::_FindGameObject(WorldObject* pSearchObject, uint32 guid)
     Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck> checker(pSearchObject, pGameObject, goCheck);
 
     TypeContainerVisitor<Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck>, GridTypeMapContainer > objectChecker(checker);
-    cell.Visit(p, objectChecker, *pSearchObject->GetMap());
+	cell.Visit(p, objectChecker, *(pSearchObject->GetMap()), *pSearchObject, pSearchObject->GetGridActivationRange());
 
     return pGameObject;
 }
@@ -823,7 +823,7 @@ void Map::ScriptsProcess()
                 {
                     WorldObject* wSource = dynamic_cast <WorldObject*> (source);
 
-                    CellPair p(Trinity::ComputeCellPair(wSource->GetPositionX(), wSource->GetPositionY()));
+                    CellCoord p(Trinity::ComputeCellCoord(wSource->GetPositionX(), wSource->GetPositionY()));
                     Cell cell(p);
                     cell.data.Part.reserved = ALL_DISTRICT;
 
@@ -831,7 +831,7 @@ void Map::ScriptsProcess()
                     Trinity::CreatureSearcher<Trinity::CreatureWithDbGUIDCheck> checker(wSource, cTarget, target_check);
 
                     TypeContainerVisitor<Trinity::CreatureSearcher <Trinity::CreatureWithDbGUIDCheck>, GridTypeMapContainer > unit_checker(checker);
-                    cell.Visit(p, unit_checker, *wSource->GetMap());
+					cell.Visit(p, unit_checker, *(wSource->GetMap()), *wSource, wSource->GetGridActivationRange());
                 }
                 else //check hashmap holders
                 {

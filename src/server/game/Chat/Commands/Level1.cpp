@@ -424,7 +424,7 @@ bool ChatHandler::HandleGPSCommand(const char* args)
             return false;
         }
     }
-    CellPair cell_val = Trinity::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
+    CellCoord cell_val = Trinity::ComputeCellCoord(obj->GetPositionX(), obj->GetPositionY());
     Cell cell(cell_val);
 
     uint32 zone_id, area_id;
@@ -443,7 +443,7 @@ bool ChatHandler::HandleGPSCommand(const char* args)
     float ground_z = map->GetHeight(obj->GetPositionX(), obj->GetPositionY(), MAX_HEIGHT);
     float floor_z = map->GetHeight(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ());
 
-    GridPair p = Trinity::ComputeGridPair(obj->GetPositionX(), obj->GetPositionY());
+    GridCoord p = Trinity::ComputeGridCoord(obj->GetPositionX(), obj->GetPositionY());
 
     // 63? WHY?
     int gx = 63 - p.x_coord;
