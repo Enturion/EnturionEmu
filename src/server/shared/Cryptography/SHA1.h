@@ -20,9 +20,9 @@
 #ifndef _AUTH_SHA1_H
 #define _AUTH_SHA1_H
 
-#include "Common.h"
+#include "Define.h"
+#include <string>
 #include <openssl/sha.h>
-#include <openssl/crypto.h>
 
 class BigNumber;
 
@@ -32,8 +32,8 @@ class SHA1Hash
         SHA1Hash();
         ~SHA1Hash();
 
-        void UpdateFinalizeBigNumbers(BigNumber *bn0, ...);
-        void UpdateBigNumbers(BigNumber *bn0, ...);
+        void UpdateFinalizeBigNumbers(BigNumber* bn0, ...);
+        void UpdateBigNumbers(BigNumber* bn0, ...);
 
         void UpdateData(const uint8 *dta, int len);
         void UpdateData(const std::string &str);

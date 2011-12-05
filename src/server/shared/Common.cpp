@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -34,7 +33,7 @@ char const* localeNames[TOTAL_LOCALES] = {
 LocaleConstant GetLocaleByName(const std::string& name)
 {
     for (uint32 i = 0; i < TOTAL_LOCALES; ++i)
-        if (name==localeNames[i])
+        if (name == localeNames[i])
             return LocaleConstant(i);
 
     return LOCALE_enUS;                                     // including enGB case

@@ -40,7 +40,7 @@
 #pragma pack(push, 1)
 #endif
 
-typedef char const* DBCString;
+//typedef char const* DBCString;
 
 struct AchievementEntry
 {

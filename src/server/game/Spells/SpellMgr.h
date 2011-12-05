@@ -917,10 +917,10 @@ inline bool IsProfessionOrRidingSkill(uint32 skill)
     return  IsProfessionSkill(skill) || skill == SKILL_RIDING;
 }
 
-inline float roundf(float value)
-{
-    return floor(value + 0.5f);
-}
+//inline float roundf(float value)
+//{
+//    return floor(value + 0.5f);
+//}
 
 struct SpellScaling
 {

@@ -458,7 +458,7 @@ void LoadDBCStores(const std::string& dataPath)
     sSpellStore.Clear();
     sSpellStore.nCount = sTrueSpellStore.nCount;
     sSpellStore.fieldCount = strlen(sSpellStore.fmt);
-    sSpellStore.indexTable = new SpellEntry*[sSpellStore.nCount];
+    sSpellStore.indexTable.asT = new SpellEntry*[sSpellStore.nCount];
     for (uint32 i = 0; i < sTrueSpellStore.GetNumRows(); ++i)
     {
         SpellEntry_n* spell = sTrueSpellStore.LookupEntryNoConst(i);
@@ -472,7 +472,7 @@ void LoadDBCStores(const std::string& dataPath)
         }
         else
         {
-            sSpellStore.indexTable[i] = NULL;
+            sSpellStore.indexTable.asT[i] = NULL;
         }
     }
 

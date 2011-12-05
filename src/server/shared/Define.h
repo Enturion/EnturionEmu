@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -43,9 +42,13 @@
 #  ifndef DECLSPEC_NORETURN
 #    define DECLSPEC_NORETURN __declspec(noreturn)
 #  endif //DECLSPEC_NORETURN
+#  ifndef DECLSPEC_DEPRECATED
+#    define DECLSPEC_DEPRECATED __declspec(deprecated)
+#  endif //DECLSPEC_DEPRECATED
 #else //PLATFORM != PLATFORM_WINDOWS
 #  define TRINITY_PATH_MAX PATH_MAX
 #  define DECLSPEC_NORETURN
+#  define DECLSPEC_DEPRECATED
 #endif //PLATFORM
 
 #if !defined(COREDEBUG)
@@ -60,44 +63,37 @@
 #if COMPILER == COMPILER_GNU
 #  define ATTR_NORETURN __attribute__((noreturn))
 #  define ATTR_PRINTF(F, V) __attribute__ ((format (printf, F, V)))
+#  define ATTR_DEPRECATED __attribute__((deprecated))
 #else //COMPILER != COMPILER_GNU
 #  define ATTR_NORETURN
 #  define ATTR_PRINTF(F, V)
+#  define ATTR_DEPRECATED
 #endif //COMPILER == COMPILER_GNU
 
 typedef ACE_INT64 int64;
 typedef ACE_INT32 int32;
 typedef ACE_INT16 int16;
 typedef ACE_INT8 int8;
-#ifndef _UINT64 //Fix for Mac OS X 10.7
 typedef ACE_UINT64 uint64;
-#define _UINT64
-#endif
-#ifndef _UINT32 //Fix for Mac OS X 10.7
 typedef ACE_UINT32 uint32;
-#define _UINT32
-#endif
-#ifndef _UINT16 //Fix for Mac OS X 10.7
 typedef ACE_UINT16 uint16;
-#define _UINT16
-#endif
-#ifndef _UINT8 //Fix for Mac OS X 10.7
 typedef ACE_UINT8 uint8;
-#define _UINT8
-#endif
+typedef char const* /*const*  */ DBCString;                       //char* DBCStrings[MAX_LOCALE];
+typedef char const* const* DB2String;                       //char* DB2Strings[MAX_LOCALE];
+
 enum
 {
-	FT_NA='x',                                              //not used or unknown, 4 byte size
-	FT_NA_BYTE='X',                                         //not used or unknown, byte
-	FT_STRING='s',                                          //char*
-	FT_FLOAT='f',                                           //float
-	FT_INT='i',                                             //uint32
-	FT_BYTE='b',                                            //uint8
-	FT_SORT='d',                                            //sorted by this field, field is not included
-	FT_IND='n',                                             //the same, but parsed to data
-	FT_LOGIC='l',                                            //Logical (boolean)
-	FT_SQL_PRESENT='p',                                      //Used in sql format to mark column present in sql dbc
-	FT_SQL_ABSENT='a'                                       //Used in sql format to mark column absent in sql dbc
+    FT_NA='x',                                              //not used or unknown, 4 byte size
+    FT_NA_BYTE='X',                                         //not used or unknown, byte
+    FT_STRING='s',                                          //char*
+    FT_FLOAT='f',                                           //float
+    FT_INT='i',                                             //uint32
+    FT_BYTE='b',                                            //uint8
+    FT_SORT='d',                                            //sorted by this field, field is not included
+    FT_IND='n',                                             //the same, but parsed to data
+    FT_LOGIC='l',                                            //Logical (boolean)
+    FT_SQL_PRESENT='p',                                      //Used in sql format to mark column present in sql dbc
+    FT_SQL_ABSENT='a'                                       //Used in sql format to mark column absent in sql dbc
 };
 
 #endif //TRINITY_DEFINE_H

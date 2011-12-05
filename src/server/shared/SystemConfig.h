@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -26,13 +25,14 @@
 #include "revision.h"
 
 #define _PACKAGENAME "SkyFireEMU"
-#define _CODENAME "COLD_DAY_IN_HELL"
 
 #if TRINITY_ENDIAN == TRINITY_BIGENDIAN
 # define _ENDIAN_STRING "big-endian"
 #else
 # define _ENDIAN_STRING "little-endian"
 #endif
+
+#define _CLIENT_BUILD_REVISION "4.0.6a - 13623"
 
 #if PLATFORM == PLATFORM_WINDOWS
 # ifdef _WIN64
