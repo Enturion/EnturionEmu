@@ -225,31 +225,31 @@ void Map::InitVisibilityDistance()
 template<class T>
 void Map::AddToGrid(T* obj, NGridType *grid, Cell const& cell)
 {
-    if (obj->m_isWorldObject)
-        grid->GetGridType(cell.CellX(), cell.CellY()).template AddWorldObject<T>(obj);
-    else
+    //if (obj->m_isWorldObject)
+    //    grid->GetGridType(cell.CellX(), cell.CellY()).template AddWorldObject<T>(obj);
+    //else
         grid->GetGridType(cell.CellX(), cell.CellY()).template AddGridObject<T>(obj);
 }
 
 template<>
 void Map::AddToGrid(Creature* obj, NGridType *grid, Cell const& cell)
 {
-    if (obj->m_isWorldObject)
-        grid->GetGridType(cell.CellX(), cell.CellY()).AddWorldObject(obj);
-    else
+    //if (obj->m_isWorldObject)
+    //    grid->GetGridType(cell.CellX(), cell.CellY()).AddWorldObject(obj);
+    //else
         grid->GetGridType(cell.CellX(), cell.CellY()).AddGridObject(obj);
 
     obj->SetCurrentCell(cell);
 }
 
-//template<class T>
-//void Map::RemoveFromGrid(T* obj, NGridType *grid, Cell const& cell)
-//{
-//    if (obj->m_isWorldObject)
-//        (*grid)(cell.CellX(), cell.CellY()).template RemoveWorldObject<T>(obj);
-//    else
-//        (*grid)(cell.CellX(), cell.CellY()).template RemoveGridObject<T>(obj);
-//}
+template<class T>
+void Map::RemoveFromGrid(T* obj, NGridType *grid, Cell const& cell)
+{
+    //if (obj->m_isWorldObject)
+    //    (*grid)(cell.CellX(), cell.CellY()).template RemoveWorldObject<T>(obj);
+    //else
+        grid->GetGridType(cell.CellX(), cell.CellY()).RemoveGridObject<T>(obj);
+}
 
 template<class T>
 void Map::SwitchGridContainers(T* obj, bool on)

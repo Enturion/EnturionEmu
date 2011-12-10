@@ -1285,7 +1285,7 @@ void World::SetInitialWorldSettings()
 
     ///- Load the DBC files
     sLog->outString("Initialize data stores...");
-    LoadDBCStores(m_dataPath);
+    LoadDBCStores(m_dataPath, m_availableDbcLocaleMask);
 
     // Load DB2 files
     sLog->outString("Initialize db2 stores...");

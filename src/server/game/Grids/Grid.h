@@ -66,13 +66,12 @@ class Grid
         /** an object of interested exits the grid
          */
         //Actually an unlink is enough, no need to go through the container
-        //template<class SPECIFIC_OBJECT> void RemoveWorldObject(SPECIFIC_OBJECT *obj)
-        //{
-        //    ASSERT(obj->GetGridRef().isValid());
-        //    i_objects.template remove<SPECIFIC_OBJECT>(obj);
-        //    ASSERT(!obj->GetGridRef().isValid());
-        //}
-
+        template<class SPECIFIC_OBJECT> void RemoveWorldObject(SPECIFIC_OBJECT *obj)
+        {
+            ASSERT(obj->IsInGrid());
+            i_container.template remove<SPECIFIC_OBJECT>(obj);
+            ASSERT(!obj->IsInGrid());
+        }
         /** Refreshes/update the grid. This required for remote grids.
          */
         //void RefreshGrid(void) { /* TBI */}
